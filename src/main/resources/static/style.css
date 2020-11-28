@@ -4,6 +4,16 @@
     top: 5%;
 }
 
+.parent {
+    position: relative;
+    display: flex;
+}
+
+.child {
+    position: absolute;
+    top:60px;
+}
+
 .flex-parent {
     display: flex;
 }
@@ -41,6 +51,10 @@
     border: none;
 }
 
+.btn-green:hover {
+    background-color: limegreen;
+}
+
 .btn-orange {
     text-decoration: none;
     border: none;
@@ -65,6 +79,10 @@
     border: none;
 }
 
+.btn-orange:hover {
+    background-color: darkorange;
+}
+
 .btn-blue {
     text-decoration: none;
     border: none;
@@ -87,4 +105,12 @@
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
     /* Lowering the shadow */
     border: none;
+}
+
+.btn-blue:hover {
+    background-color: lightskyblue;
+}
+
+.main-text {
+    font-size: 18px;
 }

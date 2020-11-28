@@ -8,7 +8,12 @@ public class MainController {
 
     @GetMapping("/")
     public String homepage() {
+
         return "index";
     }
 
+    @GetMapping("/help")
+    public String help() {
+        return "help";
+    }
 }
