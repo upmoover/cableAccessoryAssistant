@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@RequestMapping("/database")
+@RequestMapping("/database")
 public class DatabaseController {
 
-    @RequestMapping("/database")
+    @RequestMapping("")
     public String editDatabase() {
         return "editDatabase";
     }

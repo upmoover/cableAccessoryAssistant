@@ -4,18 +4,31 @@
     top: 5%;
 }
 
+.horizontal-center {
+    margin: auto;
+}
+
 .parent {
     position: relative;
+    width: 100%;
+}
+
+.container {
     display: flex;
+    justify-content: center;
+}
+
+.item {
+    align-self: center;
 }
 
 .child {
     position: absolute;
-    top:60px;
+    top: 60px;
 }
 
-.flex-parent {
-    display: flex;
+.item {
+    align-self: flex-start;
 }
 
 .center {
@@ -53,6 +66,7 @@
 
 .btn-green:hover {
     background-color: limegreen;
+    text-decoration: none;
 }
 
 .btn-orange {
@@ -81,6 +95,7 @@
 
 .btn-orange:hover {
     background-color: darkorange;
+    text-decoration: none;
 }
 
 .btn-blue {
@@ -109,8 +124,28 @@
 
 .btn-blue:hover {
     background-color: lightskyblue;
+    text-decoration: none;
 }
 
 .main-text {
     font-size: 18px;
+}
+
+.flex-parent {
+    display: flex;
+}
+
+.test {
+    margin-bottom: 120px;
+}
+
+a {
+    color: white !important;
+    text-decoration: none
+}
+
+.one-button-vertical-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

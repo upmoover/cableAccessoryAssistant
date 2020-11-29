@@ -32,5 +32,51 @@ public class Cable {
     public Cable() {
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getOuterDiameter() {
+        return outerDiameter;
+    }
+
+    public void setOuterDiameter(Long outerDiameter) {
+        this.outerDiameter = outerDiameter;
+    }
+
+    public Long getVendorCode() {
+        return vendorCode;
+    }
+
+    public void setVendorCode(Long vendorCode) {
+        this.vendorCode = vendorCode;
+    }
+
+    public Long getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Long weight) {
+        this.weight = weight;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
 }

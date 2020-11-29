@@ -29,5 +29,43 @@ public class CableGland {
     public CableGland() {
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getMinDiameter() {
+        return minDiameter;
+    }
+
+    public void setMinDiameter(Long minDiameter) {
+        this.minDiameter = minDiameter;
+    }
+
+    public Long getMaxDiameter() {
+        return maxDiameter;
+    }
+
+    public void setMaxDiameter(Long maxDiameter) {
+        this.maxDiameter = maxDiameter;
+    }
+
+    public Long getVendorCode() {
+        return vendorCode;
+    }
+
+    public void setVendorCode(Long vendorCode) {
+        this.vendorCode = vendorCode;
+    }
 }
