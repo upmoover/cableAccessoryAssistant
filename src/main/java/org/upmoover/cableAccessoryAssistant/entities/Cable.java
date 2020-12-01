@@ -16,13 +16,13 @@ public class Cable {
     private String name;
     //наружный диаметр кабеля
     @Column(name = "outer_diameter")
-    private Double outerDiameter;
+    private Float outerDiameter;
     //код производителя (артикул)
     @Column(name = "vendor_code")
     private Long vendorCode;
     //вес кабеля (кг/м)
     @Column(name = "weight")
-    private Double weight;
+    private Float weight;
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
     @Column(name = "designation")
     private String designation;
@@ -30,7 +30,7 @@ public class Cable {
     public Cable() {
     }
 
-    public Cable(String name, Double outerDiameter, Double weight) {
+    public Cable(String name, Float outerDiameter, Float weight) {
         this.name = name;
         this.outerDiameter = outerDiameter;
         this.weight = weight;
@@ -52,11 +52,11 @@ public class Cable {
         this.name = name;
     }
 
-    public Double getOuterDiameter() {
+    public Float getOuterDiameter() {
         return outerDiameter;
     }
 
-    public void setOuterDiameter(Double outerDiameter) {
+    public void setOuterDiameter(Float outerDiameter) {
         this.outerDiameter = outerDiameter;
     }
 
@@ -68,11 +68,11 @@ public class Cable {
         this.vendorCode = vendorCode;
     }
 
-    public Double getWeight() {
+    public Float getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(Float weight) {
         this.weight = weight;
     }
 
