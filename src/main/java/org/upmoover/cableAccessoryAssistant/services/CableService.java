@@ -15,12 +15,19 @@ public class CableService {
     //внедрение зависимости для репозитория
     @Autowired
     public void setCableRepository(CableRepository cableRepository) {
+
         this.cableRepository = cableRepository;
     }
 
+    //метод для поиска всех элеметов базы (аналог SELECT * FROM cable)
     public ArrayList<Cable> findAllFromBase() {
         ArrayList<Cable> cables = (ArrayList<Cable>) cableRepository.findAll();
         return cables;
+    }
+
+    //метод для сохранения экземпляра кабеля в базу
+    public void saveCableToBase(Cable cable) {
+        cableRepository.save(cable);
     }
 
 }

@@ -11,11 +11,15 @@
 </head>
 <body>
 <h2 align="center">Добавление кабеля из формы</h2>
-<form action="/showCableAddForm/addCableViaForm">
+<form action="/database/showCableAddForm/addCableViaForm">
     <!-- Количество жил в кабеле, шт   name="numberOfWires"-->
     <div class="mt-5">
         <input class="form-control" type="text" name="cableType" placeholder="Тип кабеля (КГ, RVV и т.д)">
         <input class="form-control" type="text" name="numberOfWires" placeholder="Количество жил в кабеле, шт">
+        <input class="form-control" type="text" name="sectionOfWire" placeholder="Сечение жилы в кабеле, шт">
+        <input class="form-control" type="text" name="outerDiameter" placeholder="Наружный диаметр, мм">
+        <input class="form-control" type="text" name="weight" placeholder="Вес, кг/м">
+
     </div>
     <div class="flex-parent center">
         <button type="submit" class="btn-orange margin-right">Добавить кабель в базу</button>

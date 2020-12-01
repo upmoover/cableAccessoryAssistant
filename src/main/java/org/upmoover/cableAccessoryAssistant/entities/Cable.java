@@ -1,9 +1,6 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "cable")
@@ -11,6 +8,7 @@ import javax.persistence.Table;
 public class Cable {
     //id кабеля
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     //наименование кабеля
@@ -18,18 +16,24 @@ public class Cable {
     private String name;
     //наружный диаметр кабеля
     @Column(name = "outer_diameter")
-    private Long outerDiameter;
+    private Double outerDiameter;
     //код производителя (артикул)
     @Column(name = "vendor_code")
     private Long vendorCode;
     //вес кабеля (кг/м)
     @Column(name = "weight")
-    private Long weight;
+    private Double weight;
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
     @Column(name = "designation")
     private String designation;
 
     public Cable() {
+    }
+
+    public Cable(String name, Double outerDiameter, Double weight) {
+        this.name = name;
+        this.outerDiameter = outerDiameter;
+        this.weight = weight;
     }
 
     public Long getId() {
@@ -48,11 +52,11 @@ public class Cable {
         this.name = name;
     }
 
-    public Long getOuterDiameter() {
+    public Double getOuterDiameter() {
         return outerDiameter;
     }
 
-    public void setOuterDiameter(Long outerDiameter) {
+    public void setOuterDiameter(Double outerDiameter) {
         this.outerDiameter = outerDiameter;
     }
 
@@ -64,11 +68,11 @@ public class Cable {
         this.vendorCode = vendorCode;
     }
 
-    public Long getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Long weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
