@@ -26,7 +26,7 @@ public class CableService {
     }
 
     //метод для сохранения экземпляра кабеля в базу
-    public void saveCableToBase(Cable cable) {
+    public void saveOneCableToBase(Cable cable) {
         cableRepository.save(cable);
     }
 

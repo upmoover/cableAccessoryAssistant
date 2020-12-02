@@ -20,7 +20,7 @@ public class Cable {
     //код производителя (артикул)
     @Column(name = "vendor_code")
     private Long vendorCode;
-    //вес кабеля (кг/м)
+    //вес кабеля (кг/км)
     @Column(name = "weight")
     private Float weight;
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
