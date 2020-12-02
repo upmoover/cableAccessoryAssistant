@@ -3,6 +3,7 @@ package org.upmoover.cableAccessoryAssistant.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
@@ -37,7 +38,7 @@ public class DatabaseController {
     @RequestMapping("/showCableAddForm/addCableViaForm")
     public String addViaForm(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight) {
         cableService.saveCableToBase(new Cable(cableType + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.'))));
-        return "show-all-cables-from-base";
+        return "redirect:/database/showCableAddForm";
     }
 
     //контроллер, отображающий все кабели из базы (с возможностью удаления выбранного кабеля)
@@ -47,5 +48,12 @@ public class DatabaseController {
         cables = cableService.findAllFromBase();
         model.addAttribute("cables", cables);
         return "show-all-cables-from-base";
+    }
+
+    //контроллер, удаляющий из базы выбранный кабель и возвращающий обратно на страницу с кабелями
+    @RequestMapping("/delete-cable-by-id/{id}")
+    public String deleteCabelById(@PathVariable("id") Long id) {
+        cableService.deleteCableById(id);
+        return "redirect:/database/show-all-cables-from-base";
     }
 }

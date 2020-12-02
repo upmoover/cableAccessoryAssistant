@@ -30,4 +30,9 @@ public class CableService {
         cableRepository.save(cable);
     }
 
+    //метод для удаления кабеля из базы по id
+    public void deleteCableById(Long id) {
+        cableRepository.deleteById(id);
+    }
+
 }
