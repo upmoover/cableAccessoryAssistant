@@ -71,5 +71,6 @@ public class DatabaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
         CableFileReader.readFile(pathFile);
+//        cableService.saveCableToBase();
     }
 }

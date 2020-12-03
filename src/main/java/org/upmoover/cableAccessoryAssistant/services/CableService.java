@@ -35,4 +35,14 @@ public class CableService {
         cableRepository.deleteById(id);
     }
 
+    //метод для сохранения кабеля в базу данных (с проверкой на уникальность, чтобы избежать дублирования в БД)
+    public void saveCableToBase(ArrayList<Cable> cables) {
+        for (Cable cable :
+                cables
+        ) {
+            cableRepository.save(cable);
+        }
+
+    }
+
 }
