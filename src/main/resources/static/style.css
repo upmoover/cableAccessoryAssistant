@@ -1,7 +1,7 @@
 .return-home {
-    position: absolute;
-    left: 89%;
-    top: 5%;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .horizontal-center {

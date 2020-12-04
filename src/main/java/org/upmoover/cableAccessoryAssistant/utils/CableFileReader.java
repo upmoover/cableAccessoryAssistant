@@ -15,9 +15,14 @@ public class CableFileReader {
 
             while ((str = br.readLine()) != null) {
                 arr = str.split("\t");
+                cables.add(new Cable((arr[0] + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.'))));
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        for (Cable cable: cables
+             ) {
+            System.out.println(cable);
         }
         return cables;
     }

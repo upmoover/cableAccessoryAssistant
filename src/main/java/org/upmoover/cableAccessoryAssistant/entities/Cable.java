@@ -83,4 +83,14 @@ public class Cable {
     public void setDesignation(String designation) {
         this.designation = designation;
     }
+
+    @Override
+    public String toString() {
+        return "Cable{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", outerDiameter=" + outerDiameter +
+                ", weight=" + weight +
+                '}';
+    }
 }

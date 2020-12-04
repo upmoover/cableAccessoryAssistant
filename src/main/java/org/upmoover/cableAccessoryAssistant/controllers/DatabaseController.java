@@ -64,13 +64,12 @@ public class DatabaseController {
     //контроллер, добавляющий кабели в базу данных список кабелей из txt файла
     @RequestMapping("/show-cable-add-from-file-form")
     public String showFormSaveFromFile() {
-        return "/add-cable-from-file";
+        return "add-cable-from-file";
     }
 
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
-        CableFileReader.readFile(pathFile);
-//        cableService.saveCableToBase();
+        cableService.saveCableToBase(CableFileReader.readFile(pathFile));//TODO сделать проверку на уникальность добавляемого кабеля в БД (чтобы избежать дубликатов кабеля)
     }
 }

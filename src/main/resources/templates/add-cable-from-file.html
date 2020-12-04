@@ -11,17 +11,17 @@
 </head>
 <body>
 <h2 align="center">Добавление кабеля из файла</h2>
-<form action="/database/file-path">
-    <!-- Количество жил в кабеле, шт   name="numberOfWires"-->
-    <input class="mt-5">
-        <input class="form-control" type="text" name="pathFile" placeholder="Укажите путь к файлу">
-    </div>
-    <div class="flex-parent center">
-            <button type="submit" class="btn-orange margin-right">Добавить кабель из файла в базу</button>
-    </div>
-</form>
 <div class="return-home">
     <a href="/" class="btn-blue">На главную</a>
 </div>
+<form action="/database/file-path">
+    <input class="form-control mt-2" type="text" name="pathFile"
+           placeholder="Укажите путь к txt файлу с кабелями для добавления в базу">
+    </div>
+    <div class="flex-parent center">
+        <button type="submit" class="btn-orange margin-right">Добавить кабель из файла в базу</button>
+    </div>
+</form>
+
 </body>
 </html>
