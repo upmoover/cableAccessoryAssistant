@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
+import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 
@@ -19,6 +20,15 @@ import java.util.ArrayList;
 public class DatabaseController {
 
     CableService cableService;
+
+    //
+    CableRepository cableRepository;
+
+    @Autowired
+    public void setCableRepository(CableRepository cableRepository) {
+        this.cableRepository = cableRepository;
+    }
+    //
 
     //внедрение зависимости для класса-сервиса кабеля
     @Autowired
@@ -50,6 +60,7 @@ public class DatabaseController {
     public String showAllCablesFromBase(Model model) {
         ArrayList<Cable> cables = new ArrayList<>();
         cables = cableService.findAllFromBase();
+        System.out.println(cables.get(0).getCableGland().getName());
         model.addAttribute("cables", cables);
         return "show-all-cables-from-base";
     }

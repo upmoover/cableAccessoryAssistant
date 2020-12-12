@@ -1,30 +1,40 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "cableGland")
+@Table(name = "cableGlands")
 //класс для кабельного ввода (гермоввод, сальник)
 public class CableGland {
     //id кабельного ввода
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     //наименование кабельного ввода
     @Column(name = "name")
     private String name;
     //минимальный диаметр кабеля, который можно поместить в кабельный ввод
-    @Column(name = "min_diameter")
+    @Column(name = "minDiameter")
     private Long minDiameter;
     //максимальный диаметр кабеля, который можно поместить в кабельный ввод
-    @Column(name = "max_diameter")
+    @Column(name = "maxDiameter")
     private Long maxDiameter;
     //код производителя (артикул)
-    @Column(name = "vendor_code")
-    private Long vendorCode;
+    @Column(name = "vendorCode")
+    private String vendorCode;
+    @OneToMany()
+    List<Cable> cables;
+
+    public List<Cable> getCables() {
+        return cables;
+    }
+
+    public void setCables(List<Cable> cables) {
+        this.cables = cables;
+    }
 
     public CableGland() {
     }
@@ -61,11 +71,11 @@ public class CableGland {
         this.maxDiameter = maxDiameter;
     }
 
-    public Long getVendorCode() {
+    public String getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(Long vendorCode) {
+    public void setVendorCode(String vendorCode) {
         this.vendorCode = vendorCode;
     }
 }

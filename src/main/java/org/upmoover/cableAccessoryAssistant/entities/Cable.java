@@ -1,9 +1,12 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cable")
+@Table(name = "cables")
 //класс для кабельной продукции
 public class Cable {
     //id кабеля
@@ -15,17 +18,29 @@ public class Cable {
     @Column(name = "name")
     private String name;
     //наружный диаметр кабеля
-    @Column(name = "outer_diameter")
+    @Column(name = "outerDiameter")
     private Float outerDiameter;
     //код производителя (артикул)
-    @Column(name = "vendor_code")
-    private Long vendorCode;
+    @Column(name = "vendorCode")
+    private String vendorCode;
     //вес кабеля (кг/км)
     @Column(name = "weight")
     private Float weight;
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
     @Column(name = "designation")
     private String designation;
+    //поле для связи с таблицей кабельных вводов (cableGland)
+    @ManyToOne
+    @JoinColumn(name = "cableGlandId")
+    private CableGland cableGland;
+
+    public CableGland getCableGland() {
+        return cableGland;
+    }
+
+    public void setCableGland(CableGland cableGland) {
+        this.cableGland = cableGland;
+    }
 
     public Cable() {
     }
@@ -60,11 +75,11 @@ public class Cable {
         this.outerDiameter = outerDiameter;
     }
 
-    public Long getVendorCode() {
+    public String getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(Long vendorCode) {
+    public void setVendorCode(String vendorCode) {
         this.vendorCode = vendorCode;
     }
 
@@ -83,6 +98,7 @@ public class Cable {
     public void setDesignation(String designation) {
         this.designation = designation;
     }
+
 
     @Override
     public String toString() {
