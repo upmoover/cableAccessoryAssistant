@@ -1,8 +1,5 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import javax.persistence.*;
 
 @Entity
@@ -31,15 +28,15 @@ public class Cable {
     private String designation;
     //поле для связи с таблицей кабельных вводов (cableGland)
     @ManyToOne
-    @JoinColumn(name = "cableGlandId")
-    private CableGland cableGland;
+    @JoinColumn(name = "cableGlandPgId")
+    private CableGlandPG cableGlandPg;
 
-    public CableGland getCableGland() {
-        return cableGland;
+    public CableGlandPG getCableGlandPg() {
+        return cableGlandPg;
     }
 
-    public void setCableGland(CableGland cableGland) {
-        this.cableGland = cableGland;
+    public void setCableGlandPg(CableGlandPG cableGland) {
+        this.cableGlandPg = cableGland;
     }
 
     public Cable() {

@@ -1,12 +1,9 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "cableGlands")
-//класс для кабельного ввода (гермоввод, сальник)
+//класс-родитель для кабельного ввода (гермоввод, сальник)
+@MappedSuperclass
 public class CableGland {
     //id кабельного ввода
     @Id
@@ -16,25 +13,12 @@ public class CableGland {
     //наименование кабельного ввода
     @Column(name = "name")
     private String name;
-    //минимальный диаметр кабеля, который можно поместить в кабельный ввод
-    @Column(name = "minDiameter")
-    private Long minDiameter;
     //максимальный диаметр кабеля, который можно поместить в кабельный ввод
     @Column(name = "maxDiameter")
     private Long maxDiameter;
     //код производителя (артикул)
     @Column(name = "vendorCode")
     private String vendorCode;
-    @OneToMany()
-    List<Cable> cables;
-
-    public List<Cable> getCables() {
-        return cables;
-    }
-
-    public void setCables(List<Cable> cables) {
-        this.cables = cables;
-    }
 
     public CableGland() {
     }
@@ -53,14 +37,6 @@ public class CableGland {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getMinDiameter() {
-        return minDiameter;
-    }
-
-    public void setMinDiameter(Long minDiameter) {
-        this.minDiameter = minDiameter;
     }
 
     public Long getMaxDiameter() {

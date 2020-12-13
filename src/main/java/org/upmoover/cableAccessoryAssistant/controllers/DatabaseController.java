@@ -59,7 +59,7 @@ public class DatabaseController {
     //контроллер, отображающий все кабели из базы (с возможностью удаления выбранного кабеля)
     @RequestMapping("/show-all-cables-from-base")
     public String showAllCablesFromBase(Model model) {
-        ArrayList<Cable> cables = new ArrayList<>();
+        ArrayList<Cable> cables;
         cables = cableService.findAllFromBase();
         model.addAttribute("cables", cables);
         return "show-all-cables-from-base";
