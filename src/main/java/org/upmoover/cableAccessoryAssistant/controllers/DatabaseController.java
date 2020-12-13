@@ -19,17 +19,14 @@ import java.util.ArrayList;
 @RequestMapping("/database")
 public class DatabaseController {
 
-    CableService cableService;
 
-    //
     CableRepository cableRepository;
-
     @Autowired
     public void setCableRepository(CableRepository cableRepository) {
         this.cableRepository = cableRepository;
     }
-    //
 
+    CableService cableService;
     //внедрение зависимости для класса-сервиса кабеля
     @Autowired
     public void setCableService(CableService cableService) {

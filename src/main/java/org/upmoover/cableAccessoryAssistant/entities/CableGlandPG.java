@@ -25,6 +25,11 @@ public class CableGlandPG extends CableGland {
     public CableGlandPG() {
     }
 
+    public CableGlandPG(String name, Long maxDiameter, String vendorCode, Long minDiameter) {
+        super(name, maxDiameter, vendorCode);
+        this.minDiameter = minDiameter;
+    }
+
     public Long getMinDiameter() {
         return minDiameter;
     }

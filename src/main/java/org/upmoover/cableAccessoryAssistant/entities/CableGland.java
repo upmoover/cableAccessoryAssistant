@@ -23,6 +23,12 @@ public class CableGland {
     public CableGland() {
     }
 
+    public CableGland(String name, Long maxDiameter, String vendorCode) {
+        this.name = name;
+        this.maxDiameter = maxDiameter;
+        this.vendorCode = vendorCode;
+    }
+
     public Long getId() {
         return id;
     }

@@ -2,8 +2,8 @@ package org.upmoover.cableAccessoryAssistant.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.upmoover.cableAccessoryAssistant.entities.CableGland;
+import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
 
 @Repository
-public interface CableGlandRepository extends JpaRepository<CableGland, Long> {
+public interface CableGlandPgRepository extends JpaRepository<CableGlandPG, Long> {
 }
