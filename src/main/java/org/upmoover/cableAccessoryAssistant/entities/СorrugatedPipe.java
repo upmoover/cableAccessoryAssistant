@@ -7,8 +7,8 @@ public class СorrugatedPipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "inner_diameter")
+    @Column(name = "innerDiameter")
     private Float innerDiameter;
-    @Column(name = "vendor_code")
+    @Column(name = "vendorCode")
     private String vendorCode;
 }

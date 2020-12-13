@@ -53,6 +53,7 @@ public class DatabaseController {
     public String saveOneCableToBase(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight) {
         cableService.saveOneCableToBase(new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.'))));
         return "redirect:/database/show-cable-add-form";
+        //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
     }
 
     //контроллер, отображающий все кабели из базы (с возможностью удаления выбранного кабеля)
@@ -60,7 +61,6 @@ public class DatabaseController {
     public String showAllCablesFromBase(Model model) {
         ArrayList<Cable> cables = new ArrayList<>();
         cables = cableService.findAllFromBase();
-        System.out.println(cables.get(0).getCableGland().getName());
         model.addAttribute("cables", cables);
         return "show-all-cables-from-base";
     }
@@ -82,5 +82,6 @@ public class DatabaseController {
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
         cableService.saveCableToBase(CableFileReader.readFile(pathFile));//TODO сделать проверку на уникальность добавляемого кабеля в БД (чтобы избежать дубликатов кабеля)
+        //TODO при добавлении из файла назначить id соответствующего кабельного ввода
     }
 }
