@@ -9,9 +9,9 @@ import java.util.List;
 public class CableGlandPG extends CableGland {
     //минимальный диаметр кабеля, который можно поместить в кабельный ввод
     @Column(name = "minDiameter")
-    private Long minDiameter;
+    private Float minDiameter;
     //максимальный диаметр кабеля, который можно поместить в кабельный ввод
-    @OneToMany()
+    @OneToMany(mappedBy = "cableGlandPg")
     List<Cable> cables;
 
     public List<Cable> getCables() {
@@ -25,16 +25,16 @@ public class CableGlandPG extends CableGland {
     public CableGlandPG() {
     }
 
-    public CableGlandPG(String name, Long maxDiameter, String vendorCode, Long minDiameter) {
+    public CableGlandPG(String name, Float maxDiameter, String vendorCode, Float minDiameter) {
         super(name, maxDiameter, vendorCode);
         this.minDiameter = minDiameter;
     }
 
-    public Long getMinDiameter() {
+    public Float getMinDiameter() {
         return minDiameter;
     }
 
-    public void setMinDiameter(Long minDiameter) {
+    public void setMinDiameter(Float minDiameter) {
         this.minDiameter = minDiameter;
     }
 }

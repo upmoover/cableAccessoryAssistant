@@ -27,7 +27,7 @@ public class Cable {
     @Column(name = "designation")
     private String designation;
     //поле для связи с таблицей кабельных вводов (cableGland)
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "cableGlandPgId")
     private CableGlandPG cableGlandPg;
 

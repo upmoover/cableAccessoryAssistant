@@ -21,31 +21,33 @@ public class DatabaseController {
 
 
     CableRepository cableRepository;
+
     @Autowired
     public void setCableRepository(CableRepository cableRepository) {
         this.cableRepository = cableRepository;
     }
 
     CableService cableService;
+
     //внедрение зависимости для класса-сервиса кабеля
     @Autowired
     public void setCableService(CableService cableService) {
         this.cableService = cableService;
     }
 
-    //контроллер, возвращающий страницу навигации для редактирования базы данных
+    //вернуть страницу навигации для редактирования базы данных
     @RequestMapping("")
     public String editDatabase() {
         return "edit-database";
     }
 
-    //контроллер, отображающий страницу формы добавления кабеля
+    //отобразить страницу формы добавления кабеля
     @RequestMapping("/show-cable-add-form")
     public String showCableAddForm() {
         return "one-cable-add-form";
     }
 
-    //контроллер, сохраняющий кабель в базу данных из формы
+    //сохранить кабель в базу данных из формы
     @RequestMapping("/showCableAddForm/addCableViaForm")
     public String saveOneCableToBase(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight) {
         cableService.saveOneCableToBase(new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.'))));
@@ -53,7 +55,7 @@ public class DatabaseController {
         //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
     }
 
-    //контроллер, отображающий все кабели из базы (с возможностью удаления выбранного кабеля)
+    //отобразить все кабели из базы (с возможностью удаления выбранного кабеля)
     @RequestMapping("/show-all-cables-from-base")
     public String showAllCablesFromBase(Model model) {
         ArrayList<Cable> cables;
@@ -62,23 +64,28 @@ public class DatabaseController {
         return "show-all-cables-from-base";
     }
 
-    //контроллер, удаляющий из базы выбранный кабель и возвращающий обратно на страницу с кабелями
+    //удалить из базы выбранный кабель и возвращающий обратно на страницу с кабелями
     @RequestMapping("/delete-cable-by-id/{id}")
     public String deleteCabelById(@PathVariable("id") Long id) {
         cableService.deleteCableById(id);
         return "redirect:/database/show-all-cables-from-base";
     }
 
-    //контроллер, добавляющий кабели в базу данных список кабелей из txt файла
+    //отобразить страницу добавления кабелей в базу данных список кабелей из txt файла
     @RequestMapping("/show-cable-add-from-file-form")
     public String showFormSaveFromFile() {
         return "add-cable-from-file";
     }
 
+    //добавить кабели в базу данных список кабелей из txt файла
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
         cableService.saveCableToBase(CableFileReader.readFile(pathFile));//TODO сделать проверку на уникальность добавляемого кабеля в БД (чтобы избежать дубликатов кабеля)
         //TODO при добавлении из файла назначить id соответствующего кабельного ввода
     }
+
+    //отобразить страницу редактирования базы данных кабелей
+    @RequestMapping("/edit-cable-database")
+    public String showEditCablePage() { return "edit-cable-database"; }
 }

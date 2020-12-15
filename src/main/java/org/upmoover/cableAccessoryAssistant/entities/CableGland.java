@@ -15,7 +15,7 @@ public class CableGland {
     private String name;
     //максимальный диаметр кабеля, который можно поместить в кабельный ввод
     @Column(name = "maxDiameter")
-    private Long maxDiameter;
+    private Float maxDiameter;
     //код производителя (артикул)
     @Column(name = "vendorCode")
     private String vendorCode;
@@ -23,7 +23,7 @@ public class CableGland {
     public CableGland() {
     }
 
-    public CableGland(String name, Long maxDiameter, String vendorCode) {
+    public CableGland(String name, Float maxDiameter, String vendorCode) {
         this.name = name;
         this.maxDiameter = maxDiameter;
         this.vendorCode = vendorCode;
@@ -45,11 +45,11 @@ public class CableGland {
         this.name = name;
     }
 
-    public Long getMaxDiameter() {
+    public Float getMaxDiameter() {
         return maxDiameter;
     }
 
-    public void setMaxDiameter(Long maxDiameter) {
+    public void setMaxDiameter(Float maxDiameter) {
         this.maxDiameter = maxDiameter;
     }
 

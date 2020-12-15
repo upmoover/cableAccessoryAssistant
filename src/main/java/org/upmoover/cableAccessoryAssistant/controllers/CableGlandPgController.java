@@ -2,41 +2,58 @@ package org.upmoover.cableAccessoryAssistant.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
-import org.upmoover.cableAccessoryAssistant.repositories.CableGlandPgRepository;
+import org.upmoover.cableAccessoryAssistant.services.CableGlandPgService;
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/database/cableGlandPg")
 public class CableGlandPgController {
 
-    CableGlandPgRepository cableGlandPgRepository;
+    CableGlandPgService cableGlandPgService;
 
     @Autowired
-    public void setCableGlandPgRepository(CableGlandPgRepository cableGlandPgRepository) {
-        this.cableGlandPgRepository = cableGlandPgRepository;
+    public void setCableGlandPgService(CableGlandPgService cableGlandPgService) {
+        this.cableGlandPgService = cableGlandPgService;
     }
 
+    //отобразить страницу редактирования БД кабельного ввода PG
     @RequestMapping("")
     public String showFormEditCableGlandPg() {
         return "edit-cableGlandPg-database";
     }
 
+    //отобразить страницу добавления в БД кабельного ввода PG
     @RequestMapping("/add-form")
     public String showAddCableGlandPg() {
         return "one-cableGlandPg-add-form";
     }
 
+    //добавить в БД кабельный ввод PG, отобразить страницу добавления в БД кабельного ввода PG
     @RequestMapping("/add")
     public String addCableGlandPg(@RequestParam String name, String minDiameter, String maxDiameter, String vendorCode) {
-        cableGlandPgRepository.save(new CableGlandPG(name, Long.parseLong(minDiameter.replace(',', '.')), vendorCode, Long.parseLong(maxDiameter.replace(',', '.'))));
-        return "/database/cableGlandPg/show-all-from-base";
+        cableGlandPgService.saveOneCableGlandPgToBase(new CableGlandPG(name, Float.parseFloat(maxDiameter.replace(',', '.')), vendorCode, Float.parseFloat(minDiameter.replace(',', '.'))));
+        return "redirect:/database/cableGlandPg/show-all-from-base";
     }
 
+    //отобразить страницу с полным списком кабельного ввода PG из БД
     @RequestMapping("/show-all-from-base")
-    public String editCableGlandPg() {
-        return "edit-cableGlandPg-database";
+    public String editCableGlandPg(Model model) {
+        ArrayList<CableGlandPG> cableGlandPGS;
+        cableGlandPGS = cableGlandPgService.findAllFromBase();
+        model.addAttribute("cableGlandPgS", cableGlandPGS);
+        return "show-all-cableGlandPg-from-base";
     }
 
+    //удалить из базы выбранный кабель и возвращающий обратно на страницу с кабелями
+    @RequestMapping("/delete-cableGlandPg-by-id/{id}")
+    public String deleteCableGlandPgById(@PathVariable("id") Long id) {
+        cableGlandPgService.deleteCableGlandPgById(id);
+        return "redirect:/database/cableGlandPg/show-all-from-base";
+    }
 }
