@@ -12,6 +12,7 @@ import org.upmoover.cableAccessoryAssistant.entities.Cable;
 import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
+import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
 
 import java.util.ArrayList;
 
@@ -42,9 +43,15 @@ public class CableController {
     //сохранить кабель в базу данных из формы
     @RequestMapping("/showCableAddForm/addCableViaForm")
     public String saveOneCableToBase(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight, String numberOfWiresSecond, String sectionOfWireSecond) {
+
+        Cable cable;
+
         if (numberOfWiresSecond.equals("") || sectionOfWireSecond.equals(""))
-        cableService.saveOneCableToBase(new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.'))));
-        else cableService.saveOneCableToBase(new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.'))));
+            cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
+        else cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
+        if (!CheckUniqueness.isCableInTheBase(cable)) {
+                cableService.saveOneCableToBase(cable);
+        }
         return "redirect:/database/cable/show-cable-add-form";
         //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
     }
@@ -83,6 +90,8 @@ public class CableController {
 
     //отобразить страницу редактирования базы данных кабелей
     @RequestMapping("/edit-cable-database")
-    public String showEditCablePage() { return "edit-cable-database"; }
+    public String showEditCablePage() {
+        return "edit-cable-database";
+    }
 
 }

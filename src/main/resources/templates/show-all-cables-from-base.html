@@ -30,7 +30,7 @@
         <td th:text="${cable.name}">
         <td th:text="${cable.outerDiameter}">
         <td th:text="${cable.weight}">
-        <td><a th:href="@{'/database/delete-cable-by-id/' + ${cable.id}}" class="btn btn-danger">Удалить</a></td>
+        <td><a th:href="@{'/database/cable/delete-cable-by-id/' + ${cable.id}}" class="btn btn-danger">Удалить</a></td>
     </tr>
     </tbody>
 </table>

@@ -25,7 +25,14 @@ public class CableService {
         return cables;
     }
 
-    //метод для сохранения экземпляра кабеля в базу
+    public boolean findByName(String name) {
+        //если кабель не найден
+        if (cableRepository.findCableByName(name) == null) return false;
+        //если кабель найден
+        else return true;
+    }
+
+    //метод для сохранения одиночного экземпляра кабеля в базу
     public void saveOneCableToBase(Cable cable) {
         cableRepository.save(cable);
     }
@@ -35,7 +42,7 @@ public class CableService {
         cableRepository.deleteById(id);
     }
 
-    //метод для сохранения кабеля в базу данных (с проверкой на уникальность, чтобы избежать дублирования в БД)
+    //метод для сохранения кабеля в базу данных списком (например, из файла)
     public void saveCableToBase(ArrayList<Cable> cables) {
         for (Cable cable :
                 cables

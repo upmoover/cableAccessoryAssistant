@@ -6,4 +6,5 @@ import org.upmoover.cableAccessoryAssistant.entities.Cable;
 
 @Repository
 public interface CableRepository extends JpaRepository<Cable, Long> {
+    Cable findCableByName(String name);
 }
