@@ -17,9 +17,9 @@ public class CableFileReader {
                 arr = str.split("\t");
                 
                 Cable cable;
-                cable = new Cable((arr[0] + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
+                cable = new Cable((arr[0] + " " + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
                 //проверить кабель на уникальность относительно БД
-                if (CheckUniqueness.isCableInTheBase(cable))
+                if (!CheckUniqueness.isCableInTheBase(cable))
                 cables.add(cable);
             }
         } catch (IOException e) {

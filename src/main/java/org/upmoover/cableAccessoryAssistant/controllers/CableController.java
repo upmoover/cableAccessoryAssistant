@@ -48,9 +48,10 @@ public class CableController {
 
         if (numberOfWiresSecond.equals("") || sectionOfWireSecond.equals(""))
             cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
-        else cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
+        else
+            cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
         if (!CheckUniqueness.isCableInTheBase(cable)) {
-                cableService.saveOneCableToBase(cable);
+            cableService.saveOneCableToBase(cable);
         }
         return "redirect:/database/cable/show-cable-add-form";
         //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
@@ -92,6 +93,13 @@ public class CableController {
     @RequestMapping("/edit-cable-database")
     public String showEditCablePage() {
         return "edit-cable-database";
+    }
+
+    //удалить все записи из базы данных кабелей
+    @RequestMapping("delete-all-cables-from-base")
+    public String deleteAllFromBase() {
+        cableRepository.deleteAll();
+        return "redirect:/database/cable/show-all-cables-from-base";
     }
 
 }
