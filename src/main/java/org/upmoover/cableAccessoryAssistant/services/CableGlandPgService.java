@@ -16,7 +16,7 @@ public class CableGlandPgService {
 
     //внедрение зависимости для репозитория
     @Autowired
-    public void setCableRepository(CableGlandPgRepository cableGlandPgRepository) {
+    public void setCableGlandPgRepository(CableGlandPgRepository cableGlandPgRepository) {
 
         this.cableGlandPgRepository = cableGlandPgRepository;
     }
@@ -31,20 +31,10 @@ public class CableGlandPgService {
     public void saveOneCableGlandPgToBase(CableGlandPG cableGlandPG) {
         cableGlandPgRepository.save(cableGlandPG);
     }
-    
+
     //метод для удаления кабеля из базы по id
     public void deleteCableGlandPgById(Long id) {
         cableGlandPgRepository.deleteById(id);
     }
-/*
-    //метод для сохранения кабеля в базу данных (с проверкой на уникальность, чтобы избежать дублирования в БД)
-    public void saveCableToBase(ArrayList<Cable> cables) {
-        for (Cable cable :
-                cables
-        ) {
-            cableRepository.save(cable);
-        }
-
-    }*/
 
 }

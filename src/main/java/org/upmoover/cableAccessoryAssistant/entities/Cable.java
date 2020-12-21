@@ -31,6 +31,18 @@ public class Cable {
     @JoinColumn(name = "cableGlandPgId")
     private CableGlandPG cableGlandPg;
 
+    @ManyToOne()
+    @JoinColumn(name = "cableGlandMgId")
+    private CableGlandMG cableGlandMg;
+
+    public CableGlandMG getCableGlandMg() {
+        return cableGlandMg;
+    }
+
+    public void setCableGlandMg(CableGlandMG cableGlandMg) {
+        this.cableGlandMg = cableGlandMg;
+    }
+
     public CableGlandPG getCableGlandPg() {
         return cableGlandPg;
     }

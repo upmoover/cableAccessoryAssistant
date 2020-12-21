@@ -85,7 +85,6 @@ public class CableController {
     public void addCableFromFile(@RequestParam String pathFile) {
         cableService.saveCableToBase(CableFileReader.readFile(pathFile));
 
-        //TODO сделать проверку на уникальность добавляемого кабеля в БД (чтобы избежать дубликатов кабеля)
         //TODO при добавлении из файла назначить id соответствующего кабельного ввода
     }
 
