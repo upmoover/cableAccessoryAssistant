@@ -39,7 +39,7 @@ public class CableGlandMgController {
     @RequestMapping("/add")
     public String addCableGlandMg(@RequestParam String name, String minDiameter, String maxDiameter, String vendorCode) {
         cableGlandMgService.saveOneCableGlandMgToBase(new CableGlandMG(name, Float.parseFloat(maxDiameter.replace(',', '.')), vendorCode, Float.parseFloat(minDiameter.replace(',', '.'))));
-        return "redirect:/database/cableGlandPg/show-all-from-base";
+        return "redirect:/database/cableGlandMg/show-all-from-base";
     }
 
     //отобразить страницу с полным списком кабельного ввода PG из БД
