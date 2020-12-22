@@ -22,7 +22,6 @@ public class CableGlandMgService {
 
     //метод для поиска всех элеметов базы (аналог SELECT * FROM cable)
     public ArrayList<CableGlandMG> findAllFromBase() {
-        System.out.println(this.cableGlandMgRepository + "из findAll");
         ArrayList<CableGlandMG> cableGlandMGS = (ArrayList<CableGlandMG>) cableGlandMgRepository.findAll();
         return cableGlandMGS;
     }

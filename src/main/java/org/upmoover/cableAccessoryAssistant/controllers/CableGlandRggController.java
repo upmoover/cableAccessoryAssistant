@@ -31,14 +31,14 @@ public class CableGlandRggController {
     //отобразить страницу добавления в БД кабельного ввода Rgg
     @RequestMapping("/add-form")
     public String showAddCableGlandRgg() {
-        return "one-CableGlandRgg-add-form";
+        return "one-cableGlandRgg-add-form";
     }
 
     //добавить в БД кабельный ввод PG, отобразить страницу добавления в БД кабельного ввода PG
     @RequestMapping("/add")
-    public String addCableGlandRgg(@RequestParam String name, String minDiameter, String maxDiameter, String vendorCode) {
-        CableGlandRggService.saveOneCableGlandRggToBase(new CableGlandRgg(name, Float.parseFloat(maxDiameter.replace(',', '.')), vendorCode, Float.parseFloat(minDiameter.replace(',', '.'))));
-        return "redirect:/database/CableGlandRgg/show-all-from-base";
+    public String addCableGlandRgg(@RequestParam String name, String maxDiameter, String vendorCode) {
+        CableGlandRggService.saveOneCableGlandRggToBase(new CableGlandRgg(name, Float.parseFloat(maxDiameter.replace(',', '.')), vendorCode));
+        return "redirect:/database/cableGlandRgg/show-all-from-base";
     }
 
     //отобразить страницу с полным списком кабельного ввода PG из БД
@@ -54,6 +54,6 @@ public class CableGlandRggController {
     @RequestMapping("/delete-CableGlandRgg-by-id/{id}")
     public String deleteCableGlandRggById(@PathVariable("id") Long id) {
         CableGlandRggService.deleteCableGlandRggById(id);
-        return "redirect:/database/CableGlandRgg/show-all-from-base";
+        return "redirect:/database/cableGlandRgg/show-all-from-base";
     }
 }

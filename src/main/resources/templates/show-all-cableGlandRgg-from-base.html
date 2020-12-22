@@ -11,7 +11,7 @@
     <title>Show all cables from base</title>
 </head>
 <body>
-<h2 align="center">Отобразить все кабельные вводы MG из базы</h2>
+<h2 align="center">Отобразить все кабельные вводы RGG из базы</h2>
 <div class="return-home">
     <a href="/" class="btn-blue">На главную</a>
 </div>
@@ -20,7 +20,6 @@
     <tr>
         <td>ID</td>
         <td>Наименование кабельного ввода PG</td>
-        <td>Минимальный диаметр, мм</td>
         <td>Максимальный диаметр, мм</td>
         <td>Артикул</td>
     </tr>
@@ -29,9 +28,9 @@
     <tr th:each="CableGlandRgg : ${CableGlandRggS}">
         <td th:text="${CableGlandRgg.id}">
         <td th:text="${CableGlandRgg.name}">
-        <td th:text="${CableGlandRgg.minDiameter}">
+        <td th:text="${CableGlandRgg.maxDiameter}">
         <td th:text="${CableGlandRgg.vendorCode}">
-        <td><a th:href="@{'/database/CableGlandRgg/delete-CableGlandRgg-by-id/' + ${CableGlandRgg.id}}" class="btn btn-danger">Удалить</a></td>
+        <td><a th:href="@{'/database/cableGlandRgg/delete-CableGlandRgg-by-id/' + ${CableGlandRgg.id}}" class="btn btn-danger">Удалить</a></td>
     </tr>
     </tbody>
 </table>
