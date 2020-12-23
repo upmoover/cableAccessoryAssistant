@@ -26,6 +26,9 @@ public class Cable {
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
     @Column(name = "designation")
     private String designation;
+
+    private Float length;
+
     //поле для связи с таблицей кабельных вводов (cableGland)
     @ManyToOne()
     @JoinColumn(name = "cableGlandPgId")
@@ -70,6 +73,12 @@ public class Cable {
         this.name = name;
         this.outerDiameter = outerDiameter;
         this.weight = weight;
+    }
+
+    public Cable(String designation, String name, Float length) {
+        this.designation = designation;
+        this.name = name;
+        this.length = length;
     }
 
     public Long getId() {
@@ -120,6 +129,13 @@ public class Cable {
         this.designation = designation;
     }
 
+    public Float getLength() {
+        return length;
+    }
+
+    public void setLength(Float length) {
+        this.length = length;
+    }
 
     @Override
     public String toString() {

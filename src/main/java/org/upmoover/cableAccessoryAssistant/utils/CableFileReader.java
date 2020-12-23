@@ -9,26 +9,34 @@ public class CableFileReader {
 
     public static ArrayList<Cable> readFile(String filePath) {
         ArrayList<Cable> cables = new ArrayList<>();
-        String str = null;
-        String[] arr = new String[10];
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-16"))) {
+        String str;
+        String[] arr;
+        int countField;
 
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-16"))) {
+            Cable cable;
             while ((str = br.readLine()) != null) {
+                countField = 0;
                 arr = str.split("\t");
-                
-                Cable cable;
-                cable = new Cable((arr[0] + " " + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
-                //проверить кабель на уникальность относительно БД
-                if (!CheckUniqueness.isCableInTheBase(cable))
-                cables.add(cable);
+
+                for (int i = 0; i < arr.length; i++) {
+                    if (!arr[i].equals("")) countField++;
+                }
+
+                if (countField == 4) {
+                    cable = new Cable((arr[0] + " " + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
+                    //проверить кабель на уникальность относительно БД
+                    if (!CheckUniqueness.isCableInTheBase(cable))
+                        cables.add(cable);
+                } else {
+                    cable = new Cable(arr[0], arr[1], Float.parseFloat(arr[2].replace(',', '.')));
+                    cables.add(cable);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (Cable cable: cables
-             ) {
-            System.out.println(cable);
-        }
+        
         return cables;
     }
 
