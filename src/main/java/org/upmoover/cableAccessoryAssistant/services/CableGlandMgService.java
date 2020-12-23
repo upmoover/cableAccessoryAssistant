@@ -10,14 +10,13 @@ import java.util.ArrayList;
 @Service
 public class CableGlandMgService {
 
-    CableGlandMgRepository cableGlandMgRepository, с;
+    CableGlandMgRepository cableGlandMgRepository;
 
     //внедрение зависимости для репозитория
 
     @Autowired
     public void setCableGlandMgRepository(CableGlandMgRepository cableGlandMgRepository) {
         this.cableGlandMgRepository = cableGlandMgRepository;
-        System.out.println(с + "из сеттера");
     }
 
     //метод для поиска всех элеметов базы (аналог SELECT * FROM cable)

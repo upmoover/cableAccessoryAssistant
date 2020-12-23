@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+    <!--Подключение Bootstrap 4-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Add cable form</title>
+</head>
+<body>
+<h2 align="center">Добавление гофрированной трубы из формы</h2>
+<div class="return-home">
+    <a href="/" class="btn-blue">На главную</a>
+</div>
+<form action="/database/corrugatedPipe/add">
+    <!-- Количество жил в кабеле, шт   name="numberOfWires"-->
+    <div class="mt-5">
+        <input class="form-control" type="text" name="name" placeholder="Наименование трубы гофрированной (Труба гибкая армированная внутр. д.12 мм	12.0 и т.д)">
+        <input class="form-control" type="text" name="innerDiameter" placeholder="Максимальный диаметр кабеля для трубы, мм">
+        <input class="form-control" type="text" name="vendorCode" placeholder="Артикул">
+
+    </div>
+    <div class="flex-parent center">
+            <button type="submit" class="btn-orange margin-right">Добавить трубу гофрированную в базу</button>
+    </div>
+</form>
+</body>
+</html>
