@@ -26,7 +26,7 @@ public class Cable {
     //имя кабеля в проекте (например, -W1, -W2 и т. д.)
     @Column(name = "designation")
     private String designation;
-
+    @Transient
     private Float length;
 
     //поле для связи с таблицей кабельных вводов (cableGland)
