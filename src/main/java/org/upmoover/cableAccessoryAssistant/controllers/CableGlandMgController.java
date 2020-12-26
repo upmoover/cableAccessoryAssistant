@@ -51,7 +51,7 @@ public class CableGlandMgController {
         return "show-all-cableGlandMg-from-base";
     }
 
-    //удалить из базы выбранный кабель и возвращающий обратно на страницу с кабелями
+    //удалить из базы выбранный кабельный ввод и вернуть обратно на страницу с кабельными вводами
     @RequestMapping("/delete-cableGlandMg-by-id/{id}")
     public String deleteCableGlandMgById(@PathVariable("id") Long id) {
         cableGlandMgService.deleteCableGlandMgById(id);

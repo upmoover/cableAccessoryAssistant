@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class CableFileReader {
 
-    public static ArrayList<Cable> readFile(String filePath) {
+        public static ArrayList<Cable> readFile(String filePath) {
         ArrayList<Cable> cables = new ArrayList<>();
         String str;
         String[] arr;

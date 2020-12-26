@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
+import org.upmoover.cableAccessoryAssistant.entities.CableGlandMG;
+import org.upmoover.cableAccessoryAssistant.repositories.CableGlandMgRepository;
 import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
+import org.upmoover.cableAccessoryAssistant.utils.SelectionOfAccessories;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,13 @@ public class CableController {
     @Autowired
     public void setCableService(CableService cableService) {
         this.cableService = cableService;
+    }
+
+    CableGlandMgRepository cableGlandMgRepository;
+
+    @Autowired
+    public void setCableGlandMgRepository(CableGlandMgRepository cableGlandMgRepository) {
+        this.cableGlandMgRepository = cableGlandMgRepository;
     }
 
     //отобразить страницу формы добавления кабеля
@@ -83,8 +93,15 @@ public class CableController {
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
-        cableService.saveCableToBase(CableFileReader.readFile(pathFile));
+        ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
+        for (int i = 0; i < cables.size(); i++) {
+            CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThan(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
+            System.out.println(cables.get(i).getOuterDiameter());
+            System.out.println(cableGlandMG.getName() + ", минимальный диаметр: " + cableGlandMG.getMinDiameter() + ", максимальный диаметр: " + cableGlandMG.getMaxDiameter());
+            System.out.println("----------------");
+        }
 
+//        cableService.saveCableToBase();
         //TODO при добавлении из файла назначить id соответствующего кабельного ввода
     }
 

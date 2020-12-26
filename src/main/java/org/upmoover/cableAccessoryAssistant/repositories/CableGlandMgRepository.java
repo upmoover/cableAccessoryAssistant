@@ -7,4 +7,5 @@ import org.upmoover.cableAccessoryAssistant.entities.СorrugatedPipe;
 
 @Repository
 public interface CableGlandMgRepository extends JpaRepository<CableGlandMG, Long> {
+    CableGlandMG findFirstByMaxDiameterGreaterThanAndMinDiameterLessThan(Float diameterStart, Float diameterEnd);
 }

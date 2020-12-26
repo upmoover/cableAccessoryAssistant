@@ -50,7 +50,7 @@ public class CorrugatedPipeController {
         return "show-all-CorrugatedPipe-from-base";
     }
 
-    //удалить из базы выбранный кабель и возвращающий обратно на страницу с кабелями
+    //удалить из базы выбранный кабельный ввод и вернуть обратно на страницу с кабельными вводами
     @RequestMapping("/delete-CorrugatedPipe-by-id/{id}")
     public String deleteCorrugatedPipeById(@PathVariable("id") Long id) {
         corrugatedPipeService.deleteСorrugatedPipeById(id);
