@@ -25,10 +25,15 @@ public class CableService {
         return cables;
     }
 
-    public boolean findByName(String name) {
+    //метод для поиска кабеля по имени
+    public Cable findCableByName(String name) {
+        return cableRepository.findCableByName(name);
+    }
+
+    public boolean isCableInTheDatabase(String name) {
         //если кабель не найден
         if (cableRepository.findCableByName(name) == null) return false;
-        //если кабель найден
+            //если кабель найден
         else return true;
     }
 
@@ -43,7 +48,7 @@ public class CableService {
     }
 
     //метод для сохранения кабеля в базу данных списком (например, из файла)
-    public void saveCableToBase(ArrayList<Cable> cables) {
+    public void saveCablesToBase(ArrayList<Cable> cables) {
         for (Cable cable :
                 cables
         ) {

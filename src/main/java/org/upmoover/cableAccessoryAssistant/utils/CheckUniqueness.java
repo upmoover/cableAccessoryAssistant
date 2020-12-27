@@ -17,7 +17,7 @@ public class CheckUniqueness {
 
     public static boolean isCableInTheBase(Cable cable) {
         //если кабель найден
-        if ((cableService.findByName(cable.getName()))) {
+        if ((cableService.isCableInTheDatabase(cable.getName()))) {
             System.out.println("Кабель есть в базе");
             return true;
         } else

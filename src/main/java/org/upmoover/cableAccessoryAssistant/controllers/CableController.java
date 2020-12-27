@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.upmoover.cableAccessoryAssistant.CableAccessoryAssistantApplication;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
 import org.upmoover.cableAccessoryAssistant.entities.CableGlandMG;
 import org.upmoover.cableAccessoryAssistant.repositories.CableGlandMgRepository;
@@ -15,7 +16,6 @@ import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
-import org.upmoover.cableAccessoryAssistant.utils.SelectionOfAccessories;
 
 import java.util.ArrayList;
 
@@ -78,7 +78,7 @@ public class CableController {
 
     //удалить из базы выбранный кабель и возвращающий обратно на страницу с кабелями
     @RequestMapping("/delete-cable-by-id/{id}")
-    public String deleteCabelById(@PathVariable("id") Long id) {
+    public String deleteCableById(@PathVariable("id") Long id) {
         cableService.deleteCableById(id);
         return "redirect:/database/cable/show-all-cables-from-base";
     }
@@ -93,15 +93,16 @@ public class CableController {
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
-        ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
+         ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
         for (int i = 0; i < cables.size(); i++) {
             CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThan(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
             System.out.println(cables.get(i).getOuterDiameter());
             System.out.println(cableGlandMG.getName() + ", минимальный диаметр: " + cableGlandMG.getMinDiameter() + ", максимальный диаметр: " + cableGlandMG.getMaxDiameter());
+            cables.get(i).setCableGlandMg(cableGlandMG);
+            cableService.saveOneCableToBase(cables.get(i));
             System.out.println("----------------");
         }
 
-//        cableService.saveCableToBase();
         //TODO при добавлении из файла назначить id соответствующего кабельного ввода
     }
 

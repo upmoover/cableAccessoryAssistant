@@ -1,13 +1,16 @@
 package org.upmoover.cableAccessoryAssistant.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
+import org.upmoover.cableAccessoryAssistant.entities.CableGlandMG;
+import org.upmoover.cableAccessoryAssistant.repositories.CableGlandMgRepository;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class CableFileReader {
 
-        public static ArrayList<Cable> readFile(String filePath) {
+    public static ArrayList<Cable> readFile(String filePath) {
         ArrayList<Cable> cables = new ArrayList<>();
         String str;
         String[] arr;
@@ -21,7 +24,7 @@ public class CableFileReader {
                     cable = new Cable((arr[0] + " " + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
                     //проверить кабель на уникальность относительно БД
                     if (!CheckUniqueness.isCableInTheBase(cable))
-                        cables.add(cable);
+                    cables.add(cable);
                 } else {
                     //иначе, в файле содержится список кабеля для подбора аксессуаров
                     String rplc = arr[2].replace(" m", "");

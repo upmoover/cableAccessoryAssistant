@@ -16,12 +16,12 @@
 </div>
 <h4>Примечание: выгрузить список кабелей проекта из Eplan, сохранить excel файл как текст юникод, путь к сохраненному
     текстовому файлу указать в поле ниже</h4>
-<form action="/database/cable/file-path">
+<form action="/start/show-cables">
     <input class="form-control mt-2" type="text" name="pathFile"
            placeholder="Укажите путь к txt файлу с кабелями для подбора аксессуаров">
     </div>
     <div class="flex-parent center">
-        <a href="/database/cable/file-path" class="btn-green margin-right">Добавить список кабелей из проекта</a>
+        <button type="submit" href="/database/cable/file-path" class="btn-green margin-right">Добавить список кабелей из проекта</button>
     </div>
 </form>
 
