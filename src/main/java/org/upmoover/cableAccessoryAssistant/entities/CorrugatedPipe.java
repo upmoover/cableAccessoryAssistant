@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "СorrugatedPipe")
-public class СorrugatedPipe {
+public class CorrugatedPipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,10 +15,10 @@ public class СorrugatedPipe {
     @Column(name = "name")
     private String name;
 
-    public СorrugatedPipe() {
+    public CorrugatedPipe() {
     }
 
-    public СorrugatedPipe(String name, Float innerDiameter, String vendorCode) {
+    public CorrugatedPipe(String name, Float innerDiameter, String vendorCode) {
         this.name = name;
         this.innerDiameter = innerDiameter;
         this.vendorCode = vendorCode;

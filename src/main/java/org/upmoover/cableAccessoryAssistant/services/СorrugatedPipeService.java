@@ -2,31 +2,31 @@ package org.upmoover.cableAccessoryAssistant.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.upmoover.cableAccessoryAssistant.entities.СorrugatedPipe;
-import org.upmoover.cableAccessoryAssistant.repositories.СorrugatedPipeRepository;
+import org.upmoover.cableAccessoryAssistant.entities.CorrugatedPipe;
+import org.upmoover.cableAccessoryAssistant.repositories.CorrugatedPipeRepository;
 
 import java.util.ArrayList;
 
 @Service
 public class СorrugatedPipeService {
 
-    СorrugatedPipeRepository corrugatedPipeRepository;
+    CorrugatedPipeRepository corrugatedPipeRepository;
 
     //внедрение зависимости для репозитория
 
     @Autowired
-    public void setСorrugatedPipeRepository(СorrugatedPipeRepository сorrugatedPipeRepository) {
-        this.corrugatedPipeRepository = сorrugatedPipeRepository;
+    public void setСorrugatedPipeRepository(CorrugatedPipeRepository corrugatedPipeRepository) {
+        this.corrugatedPipeRepository = corrugatedPipeRepository;
     }
 
     //метод для поиска всех элеметов базы (аналог SELECT * FROM cable)
-    public ArrayList<СorrugatedPipe> findAllFromBase() {
-        ArrayList<СorrugatedPipe> СorrugatedPipeS = (ArrayList<СorrugatedPipe>) corrugatedPipeRepository.findAll();
+    public ArrayList<CorrugatedPipe> findAllFromBase() {
+        ArrayList<CorrugatedPipe> СorrugatedPipeS = (ArrayList<CorrugatedPipe>) corrugatedPipeRepository.findAll();
         return СorrugatedPipeS;
     }
 
     //метод для сохранения экземпляра кабеля в базу
-    public void saveOneСorrugatedPipeToBase(СorrugatedPipe corrugatedPipe) {
+    public void saveOneСorrugatedPipeToBase(CorrugatedPipe corrugatedPipe) {
         corrugatedPipeRepository.save(corrugatedPipe);
     }
 

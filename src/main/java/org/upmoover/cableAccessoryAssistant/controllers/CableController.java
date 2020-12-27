@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.upmoover.cableAccessoryAssistant.CableAccessoryAssistantApplication;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
 import org.upmoover.cableAccessoryAssistant.entities.CableGlandMG;
-import org.upmoover.cableAccessoryAssistant.repositories.CableGlandMgRepository;
-import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
+import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
+import org.upmoover.cableAccessoryAssistant.entities.CorrugatedPipe;
+import org.upmoover.cableAccessoryAssistant.repositories.*;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
@@ -43,6 +43,28 @@ public class CableController {
     public void setCableGlandMgRepository(CableGlandMgRepository cableGlandMgRepository) {
         this.cableGlandMgRepository = cableGlandMgRepository;
     }
+
+    CorrugatedPipeRepository corrugatedPipeRepository;
+
+    @Autowired
+    public void setCorrugatedPipeRepository(CorrugatedPipeRepository corrugatedPipeRepository) {
+        this.corrugatedPipeRepository = corrugatedPipeRepository;
+    }
+
+    CableGlandRggRepository cableGlandRggRepository;
+
+    @Autowired
+    public void setCableGlandRggRepository(CableGlandRggRepository cableGlandRggRepository) {
+        this.cableGlandRggRepository = cableGlandRggRepository;
+    }
+
+    CableGlandPgRepository cableGlandPgRepository;
+
+    @Autowired
+    public void setCableGlandPgRepository(CableGlandPgRepository cableGlandPgRepository) {
+        this.cableGlandPgRepository = cableGlandPgRepository;
+    }
+
 
     //отобразить страницу формы добавления кабеля
     @RequestMapping("/show-cable-add-form")
@@ -93,13 +115,22 @@ public class CableController {
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
-         ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
+        //получение списка кабелей из файла для добавления в базу данных
+        ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
+        //проход по полученному списку кабелей, для подбора к каждому из кабелей аксессуаров из соответствующих таблиц
         for (int i = 0; i < cables.size(); i++) {
+            //подбор аксессуара: кабельный ввод PG
+            CableGlandPG cableglandpg = CableGlandPgRepository
             CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThan(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
             System.out.println(cables.get(i).getOuterDiameter());
             System.out.println(cableGlandMG.getName() + ", минимальный диаметр: " + cableGlandMG.getMinDiameter() + ", максимальный диаметр: " + cableGlandMG.getMaxDiameter());
             cables.get(i).setCableGlandMg(cableGlandMG);
+            CorrugatedPipe corrugatedPipe = corrugatedPipeRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter());
+            cables.get(i).setCorrugatedPipe(corrugatedPipe);
+            String name = corrugatedPipe.getName();
+            System.out.println(cables.get(i).getCorrugatedPipe().getName() + ", максимальный диаметр кабеля " + cables.get(i).getCorrugatedPipe().getInnerDiameter());
             cableService.saveOneCableToBase(cables.get(i));
+            System.out.println(cableGlandRggRepository.getOne(1L).getCorrugatedPipe().getName());
             System.out.println("----------------");
         }
 

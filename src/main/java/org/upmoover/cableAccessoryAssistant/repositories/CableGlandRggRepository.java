@@ -7,4 +7,5 @@ import org.upmoover.cableAccessoryAssistant.entities.CableGlandRgg;
 
 @Repository
 public interface CableGlandRggRepository extends JpaRepository<CableGlandRgg, Long> {
+    CableGlandRgg findFirstByMaxDiameterGreaterThan(Float diameter);
 }

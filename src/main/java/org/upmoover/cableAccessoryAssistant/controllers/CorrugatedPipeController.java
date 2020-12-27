@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.upmoover.cableAccessoryAssistant.entities.СorrugatedPipe;
+import org.upmoover.cableAccessoryAssistant.entities.CorrugatedPipe;
 import org.upmoover.cableAccessoryAssistant.services.СorrugatedPipeService;
 
 import java.util.ArrayList;
@@ -37,14 +37,14 @@ public class CorrugatedPipeController {
     //добавить в БД кабельный ввод PG, отобразить страницу добавления в БД кабельного ввода PG
     @RequestMapping("/add")
     public String addCorrugatedPipe(@RequestParam String name, String innerDiameter, String vendorCode) {
-        corrugatedPipeService.saveOneСorrugatedPipeToBase(new СorrugatedPipe(name, Float.parseFloat(innerDiameter.replace(',', '.')), vendorCode));
+        corrugatedPipeService.saveOneСorrugatedPipeToBase(new CorrugatedPipe(name, Float.parseFloat(innerDiameter.replace(',', '.')), vendorCode));
         return "redirect:/database/corrugatedPipe/show-all-from-base";
     }
 
     //отобразить страницу с полным списком кабельного ввода PG из БД
     @RequestMapping("/show-all-from-base")
     public String editCableGlandPg(Model model) {
-        ArrayList<СorrugatedPipe> CorrugatedPipeS;
+        ArrayList<CorrugatedPipe> CorrugatedPipeS;
         CorrugatedPipeS = corrugatedPipeService.findAllFromBase();
         model.addAttribute("CorrugatedPipeS", CorrugatedPipeS);
         return "show-all-CorrugatedPipe-from-base";

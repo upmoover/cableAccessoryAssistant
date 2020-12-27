@@ -42,6 +42,10 @@ public class Cable {
     @JoinColumn(name = "cableGlandRggId")
     private CableGlandRgg cableGlandRgg;
 
+    @ManyToOne()
+    @JoinColumn(name = "corrugatedPipeId")
+    private CorrugatedPipe corrugatedPipe;
+
     public CableGlandRgg getCableGlandRgg() {
         return cableGlandRgg;
     }
@@ -64,6 +68,14 @@ public class Cable {
 
     public void setCableGlandPg(CableGlandPG cableGland) {
         this.cableGlandPg = cableGland;
+    }
+
+    public CorrugatedPipe getCorrugatedPipe() {
+        return corrugatedPipe;
+    }
+
+    public void setCorrugatedPipe(CorrugatedPipe corrugatedPipe) {
+        this.corrugatedPipe = corrugatedPipe;
     }
 
     public Cable() {
