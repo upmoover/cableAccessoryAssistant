@@ -18,11 +18,10 @@ public class CheckUniqueness {
     public static boolean isCableInTheBase(Cable cable) {
         //если кабель найден
         if ((cableService.isCableInTheDatabase(cable.getName()))) {
-            System.out.println("Кабель есть в базе");
             return true;
-        } else
-            System.out.println("Кабеля нет в базе");
-        return false;
+        }
+        //кабеля нет в базе
+        else return false;
 
     }
 }

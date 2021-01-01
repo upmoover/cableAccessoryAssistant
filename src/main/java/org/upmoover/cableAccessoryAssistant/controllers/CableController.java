@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.upmoover.cableAccessoryAssistant.entities.Cable;
-import org.upmoover.cableAccessoryAssistant.entities.CableGlandMG;
-import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
-import org.upmoover.cableAccessoryAssistant.entities.CorrugatedPipe;
+import org.upmoover.cableAccessoryAssistant.entities.*;
 import org.upmoover.cableAccessoryAssistant.repositories.*;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
@@ -111,7 +108,7 @@ public class CableController {
         return "add-cable-from-file";
     }
 
-    //добавить кабели в базу данных список кабелей из txt файла
+    //сохранить кабели в базу данных список кабелей из txt файла
     @RequestMapping("/file-path")
     @ResponseStatus(value = HttpStatus.OK)
     public void addCableFromFile(@RequestParam String pathFile) {
@@ -120,21 +117,17 @@ public class CableController {
         //проход по полученному списку кабелей, для подбора к каждому из кабелей аксессуаров из соответствующих таблиц
         for (int i = 0; i < cables.size(); i++) {
             //подбор аксессуара: кабельный ввод PG
-            CableGlandPG cableglandpg = CableGlandPgRepository
-            CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThan(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
-            System.out.println(cables.get(i).getOuterDiameter());
-            System.out.println(cableGlandMG.getName() + ", минимальный диаметр: " + cableGlandMG.getMinDiameter() + ", максимальный диаметр: " + cableGlandMG.getMaxDiameter());
+            CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
+            cables.get(i).setCableGlandPg(cableglandpg);
+            CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter());
             cables.get(i).setCableGlandMg(cableGlandMG);
+            CableGlandRgg cableGlandRgg = cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter());
+            cables.get(i).setCableGlandRgg(cableGlandRgg);
             CorrugatedPipe corrugatedPipe = corrugatedPipeRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter());
             cables.get(i).setCorrugatedPipe(corrugatedPipe);
-            String name = corrugatedPipe.getName();
-            System.out.println(cables.get(i).getCorrugatedPipe().getName() + ", максимальный диаметр кабеля " + cables.get(i).getCorrugatedPipe().getInnerDiameter());
             cableService.saveOneCableToBase(cables.get(i));
-            System.out.println(cableGlandRggRepository.getOne(1L).getCorrugatedPipe().getName());
-            System.out.println("----------------");
         }
-
-        //TODO при добавлении из файла назначить id соответствующего кабельного ввода
+        System.out.println("Кабели из файла добавлены в базу.");
     }
 
     //отобразить страницу редактирования базы данных кабелей
