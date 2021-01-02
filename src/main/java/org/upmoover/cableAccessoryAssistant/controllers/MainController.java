@@ -51,7 +51,7 @@ public class MainController {
 
     @RequestMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public void getCableAttributes(@ModelAttribute("selectedOption") String selectedOption) {
+    public void getCableAttributes(@RequestBody String selectedOption) {
         System.out.println(selectedOption);
     }
 

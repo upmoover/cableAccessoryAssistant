@@ -53,15 +53,16 @@
         let dataArr = [];// JSON объект, отправить на бэк
         //TODO посмотреть POST запрос, аякс запрос тут же в скрипте, обработки
 
-        // btn.preventDefault();
         btn.addEventListener('click', function () {
             dataArr = [];
             dataRow.forEach(row => {
                 let name = row.querySelector('.name');
-                // console.log(name.dataset.value);
                 let cableGlandType = row.querySelector('.cableGlandType');
                 dataArr.push({name: name.dataset.value, cableGlandType: cableGlandType.value});
-                // console.log(dataArr);
+                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+                xmlhttp.open("POST", "/start/get-attributes");
+                xmlhttp.setRequestHeader("Content-Type", "");
+                xmlhttp.send(JSON.stringify(dataArr));
             })
 
         });
