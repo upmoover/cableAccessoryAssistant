@@ -11,9 +11,15 @@
     <title>Show all cables from base</title>
 </head>
 <body>
-<h2 align="center">Отобразить все кабельные вводы MG из базы</h2>
+<h2 align="center">Отобразить всю гофру из базы</h2>
 <div class="return-home">
     <a href="/" class="btn-blue">На главную</a>
+</div>
+<div class="test">
+    <div class="container">
+        <a href="/database/corrugatedPipe/add-form" class="btn-orange margin-right">Добавить гофрированную трубу через
+            форму</a>
+    </div>
 </div>
 <table>
     <thead class="thead-dark">
@@ -30,7 +36,8 @@
         <td th:text="${corrugatedPipe.name}">
         <td th:text="${corrugatedPipe.innerDiameter}">
         <td th:text="${corrugatedPipe.vendorCode}">
-        <td><a th:href="@{'/database/corrugatedPipe/delete-CorrugatedPipe-by-id/' + ${corrugatedPipe.id}}" class="btn btn-danger">Удалить</a></td>
+        <td><a th:href="@{'/database/corrugatedPipe/delete-CorrugatedPipe-by-id/' + ${corrugatedPipe.id}}"
+               class="btn btn-danger">Удалить</a></td>
     </tr>
     </tbody>
 </table>

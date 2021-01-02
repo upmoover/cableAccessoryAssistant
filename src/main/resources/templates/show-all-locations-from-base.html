@@ -11,31 +11,27 @@
     <title>Show all cables from base</title>
 </head>
 <body>
-<h2 align="center">Отобразить все кабельные вводы RGG из базы</h2>
+<h2 align="center">Отобразить все местоположения из базы</h2>
 <div class="return-home">
     <a href="/" class="btn-blue">На главную</a>
 </div>
 <div class="test">
     <div class="container">
-        <a href="/database/cableGlandRgg/add-form" class="btn-orange margin-right">Добавить кабельный ввод через форму</a>
+        <a href="/database/locations/add-form" class="btn-orange margin-right">Добавить местоположение</a>
     </div>
 </div>
 <table>
     <thead class="thead-dark">
     <tr>
         <td>ID</td>
-        <td>Наименование кабельного ввода RGG</td>
-        <td>Максимальный диаметр, мм</td>
-        <td>Артикул</td>
+        <td>Наименование местоположения</td>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="CableGlandRgg : ${CableGlandRggS}">
-        <td th:text="${CableGlandRgg.id}">
-        <td th:text="${CableGlandRgg.name}">
-        <td th:text="${CableGlandRgg.maxDiameter}">
-        <td th:text="${CableGlandRgg.vendorCode}">
-        <td><a th:href="@{'/database/cableGlandRgg/delete-CableGlandRgg-by-id/' + ${CableGlandRgg.id}}" class="btn btn-danger">Удалить</a></td>
+    <tr th:each="location : ${locations}">
+        <td th:text="${location.id}">
+        <td th:text="${location.name}">
+        <td><a th:href="@{'/database/locations/delete-location-by-id/' + ${location.id}}" class="btn btn-danger">Удалить</a></td>
     </tr>
     </tbody>
 </table>

@@ -21,6 +21,8 @@
         <td>Обозначение в проекте</td>
         <td>Длина, м</td>
         <td>Сальник</td>
+        <td style="text-align: center">Гофра</td>
+        <td>Начало кабеля</td>
     </tr>
     </thead>
     <tbody>
@@ -31,10 +33,21 @@
             <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
             <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
             <td>
-                <select class="cableGlandType" name="values">
+                <select name="cableGlandType">
                     <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
                     <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
                     <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
+                </select>
+            </td>
+            <td>
+                <select name="corrugatedPipe">
+                    <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
+                    <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
+                </select>
+            </td>
+            <td>
+                <select name="startLocation">
+                    <option th:each="location : ${locations}" th:value="${location.name} + ${cable.name} + '=startLocation'" th:text="${location.name}"></option>
                 </select>
             </td>
         </tr>
