@@ -14,7 +14,6 @@
 <div class="return-home">
     <a href="/" class="btn-blue">На главную</a>
 </div>
-<!--<button type="submit" class="submit-btn">Отправить</button>-->
 <table>
     <thead class="thead-dark">
     <tr>
@@ -25,46 +24,23 @@
     </tr>
     </thead>
     <tbody>
-        <button class="submit-btn">Отправить</button>
+    </tbody>
+    <form th:method="POST" th:action="@{/start/get-attributes}">
         <tr class="data-row" th:each="cable : ${cables}">
-            <td style="text-align: center" th:text="${cable.designation}" th:value="${cable.designation}">
-            <td style="text-align: center" class="name" th:text="${cable.name}" th:data-value="${cable.name}">
+            <td th:text="${cable.designation}" th:value="${cable.designation}">
+            <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
             <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
             <td>
-                <select class="cableGlandType">
-                    <option name="value" th:value="PG" th:text="PG"></option>
-                    <option th:value="MG" th:text="MG"></option>
-                    <option th:value="RGG" th:text="RGG"></option>
+                <select class="cableGlandType" name="values">
+                    <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
+                    <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
+                    <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
                 </select>
             </td>
-            <!--        <td><a th:href="@{'/database/cable/delete-cable-by-id/' + ${cable.id}}" class="btn btn-danger">Удалить</a></td>-->
         </tr>
-    </tbody>
+        <button type="submit">Отправить</button>
+    </form>
 </table>
 </form>
 </body>
 </html>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.querySelector('.submit-btn');
-        const dataRow = document.querySelectorAll('.data-row');
-
-        let dataArr = [];// JSON объект, отправить на бэк
-        //TODO посмотреть POST запрос, аякс запрос тут же в скрипте, обработки
-
-        btn.addEventListener('click', function () {
-            dataArr = [];
-            dataRow.forEach(row => {
-                let name = row.querySelector('.name');
-                let cableGlandType = row.querySelector('.cableGlandType');
-                dataArr.push({name: name.dataset.value, cableGlandType: cableGlandType.value});
-                var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-                xmlhttp.open("POST", "/start/get-attributes");
-                xmlhttp.setRequestHeader("Content-Type", "");
-                xmlhttp.send(JSON.stringify(dataArr));
-            })
-
-        });
-    });
-</script>

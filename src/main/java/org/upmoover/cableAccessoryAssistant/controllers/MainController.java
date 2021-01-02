@@ -49,10 +49,12 @@ public class MainController {
         return "show-cables-for-selection-accessories";
     }
 
-    @RequestMapping("/start/get-attributes")
+    @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public void getCableAttributes(@RequestBody String selectedOption) {
-        System.out.println(selectedOption);
-    }
+    public void getCableAttributes(@RequestParam(value = "values", required = false) String[] values) {
+        for (int i = 0; i < values.length; i++ ) {
+            System.out.println("name:" + values[i].split("=")[0] + ", cableGland:" + values[i].split("=")[1]);
+        }
 
+    }
 }
