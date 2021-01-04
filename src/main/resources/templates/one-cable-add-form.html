@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -15,11 +15,16 @@
     <a href="/" class="btn-blue">На главную</a>
 </div>
 <form action="/database/cable/showCableAddForm/addCableViaForm">
-    <!-- Количество жил в кабеле, шт   name="numberOfWires"-->
     <div class="mt-5">
-        <input class="form-control" type="text" name="cableType" placeholder="Тип кабеля (КГ, RVV и т.д)">
-        <input class="form-control" type="text" name="numberOfWires" placeholder="Количество жил в кабеле, шт">
-        <input class="form-control" type="text" name="sectionOfWire" placeholder="Сечение жилы в кабеле, шт">
+        <input class="form-control" type="text" th:if="${notFoundCable == null}" name="cableType" placeholder="Тип кабеля (КГ, RVV и т.д)">
+        <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableType}" name="cableType"> <!--th:if="${notFoundCable != null}"-->
+
+        <input class="form-control" type="text" th:if="${notFoundCable == null}" name="numberOfWires" placeholder="Количество жил в кабеле, шт">
+        <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableNumberOfWires}" name="numberOfWires">
+
+        <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWire" placeholder="Сечение жилы в кабеле, шт">
+        <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableSectionOfWire}" name="sectionOfWire">
+
         <input class="form-control" type="text" name="outerDiameter" placeholder="Наружный диаметр, мм">
         <input class="form-control" type="text" name="weight" placeholder="Вес, кг/км">
         <br>

@@ -1,7 +1,9 @@
 .return-home {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .horizontal-center {
@@ -33,7 +35,8 @@
 
 .center {
     justify-content: center;
-    padding-top: 10%;
+    padding-top: 3%;
+    padding-bottom: 3%;
 }
 
 .margin-right {

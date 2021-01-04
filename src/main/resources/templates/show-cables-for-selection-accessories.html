@@ -10,11 +10,18 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <title>Show all cables from base</title>
 </head>
+<body>
 <h2 align="center">Отобразить кабели для подбора аксессуаров</h2>
-<div class="return-home">
+<div class="flex-parent center">
     <a href="/" class="btn-blue">На главную</a>
 </div>
-<table>
+<!--<div style="text-align: center" th:if="${#lists.isEmpty(notFoundCables)}">Соответствие БД: Все кабели из списка найдены в базе данных, можно продолжать работу</div>-->
+<div style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}"><b>Несоответствие БД</b>: Не все кабели из списка найдены в базе данных</div>
+<h4 style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">Добавьте недостающие кабели</h4>
+<div class="flex-parent center" style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">
+    <a href="/start/add-notFoundCable" class="btn-orange">Добавить кабели</a>
+</div>
+<table align="center">
     <thead class="thead-dark">
     <tr>
         <td>ID</td>
@@ -23,6 +30,8 @@
         <td>Сальник</td>
         <td style="text-align: center">Гофра</td>
         <td>Начало кабеля</td>
+        <td></td>
+        <td>Конец кабеля</td>
     </tr>
     </thead>
     <tbody>
@@ -43,17 +52,30 @@
                 <select name="corrugatedPipe">
                     <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
                     <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
+                    <option th:value="${cable.name} + '=metal'" th:text="Металл"></option>
                 </select>
             </td>
-            <td>
+            <td align="center">
                 <select name="startLocation">
-                    <option th:each="location : ${locations}" th:value="${location.name} + ${cable.name} + '=startLocation'" th:text="${location.name}"></option>
+                    <option style="align-self: center" th:each="location : ${locations}"
+                            th:value="${location.name} + ${cable.name} + '=startLocation'"
+                            th:text="${location.name}"></option>
+                </select>
+            </td>
+            <td>-------></td>
+            <td align="center">
+                <select name="endLocation">
+                    <option style="align-self: center" th:each="location : ${locations}"
+                            th:value="${location.name} + ${cable.name} + '=endLocation'"
+                            th:text="${location.name}"></option>
                 </select>
             </td>
         </tr>
-        <button type="submit">Отправить</button>
     </form>
 </table>
 </form>
 </body>
+<div class="flex-parent center">
+    <button type="submit" class="btn-green">Подобрать аксессуары</button>
+</div>
 </html>

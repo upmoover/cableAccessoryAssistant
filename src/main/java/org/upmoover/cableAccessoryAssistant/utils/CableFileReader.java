@@ -1,14 +1,14 @@
 package org.upmoover.cableAccessoryAssistant.utils;
 
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
-
 import java.io.*;
 import java.util.ArrayList;
 
 public class CableFileReader {
 
-    public static ArrayList<Cable> readFile(String filePath) {
+        public static ArrayList<Cable> readFile(String filePath) {
         ArrayList<Cable> cables = new ArrayList<>();
+        cables.clear();
         String str;
         String[] arr;
 
@@ -16,8 +16,9 @@ public class CableFileReader {
             Cable cable;
             while ((str = br.readLine()) != null) {
                 arr = str.split("\t");
-                //если строка не начинается с имени кабеля в проекте, значит в файле содержится список кабеля для добавления в базу данных
+                //если строка не начинается с имени кабеля в проекте (W1, W2...), значит в файле содержится список кабеля для добавления в базу данных
                 if (!arr[0].contains("W")) {
+                    String name = arr[1].replace('x', 'х');
                     cable = new Cable((arr[0] + " " + arr[1]).replace(',', '.'), Float.parseFloat(arr[2].replace(',', '.')), Float.parseFloat(arr[3].replace(',', '.')));
                     //проверить кабель на уникальность относительно БД
                     if (!CheckUniqueness.isCableInTheBase(cable))
@@ -26,7 +27,8 @@ public class CableFileReader {
                     //иначе, в файле содержится список кабеля для подбора аксессуаров
                     String rplc = arr[2].replace(" m", "");
                     rplc = rplc.replace(",", ".");
-                    cable = new Cable(arr[0], arr[1], Float.parseFloat(rplc));
+                    String name = arr[1].replace('x', 'х');
+                    cable = new Cable(arr[0], name.replace(',', '.'), Float.parseFloat(rplc));
                     cables.add(cable);
                 }
             }

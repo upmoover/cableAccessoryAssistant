@@ -62,7 +62,6 @@ public class CableController {
         this.cableGlandPgRepository = cableGlandPgRepository;
     }
 
-
     //отобразить страницу формы добавления кабеля
     @RequestMapping("/show-cable-add-form")
     public String showCableAddForm() {
