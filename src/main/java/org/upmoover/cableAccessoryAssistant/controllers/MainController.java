@@ -106,7 +106,7 @@ public class MainController {
             model.addAttribute("notFoundCableType", s1);
             model.addAttribute("notFoundCableNumberOfWires", s2);
             model.addAttribute("notFoundCableSectionOfWire", s3);
-//            notFoundCables.remove(0);
+            notFoundCables.remove(0);
         } else {
             splitCable.clear();
             model.addAttribute("notFoundCable", null);
