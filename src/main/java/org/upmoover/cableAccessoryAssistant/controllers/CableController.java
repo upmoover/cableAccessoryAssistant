@@ -13,12 +13,14 @@ import org.upmoover.cableAccessoryAssistant.repositories.*;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
+import org.upmoover.cableAccessoryAssistant.utils.Label;
 
 import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/database/cable")
 public class CableController {
+
     CableRepository cableRepository;
 
     @Autowired
@@ -65,6 +67,8 @@ public class CableController {
     //отобразить страницу формы добавления кабеля
     @RequestMapping("/show-cable-add-form")
     public String showCableAddForm() {
+        Label label = Label.getInstance();
+        label.counter = 1;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
         return "one-cable-add-form";
     }
 
@@ -81,7 +85,10 @@ public class CableController {
         if (!CheckUniqueness.isCableInTheBase(cable)) {
             cableService.saveOneCableToBase(cable);
         }
-        return "redirect:/database/cable/show-cable-add-form";
+//        if (label.counter == 0)
+//            return "redirect:/database/cable/show-cable-add-form";
+//        else
+            return "redirect:/start/add-notFoundCable";
         //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
     }
 

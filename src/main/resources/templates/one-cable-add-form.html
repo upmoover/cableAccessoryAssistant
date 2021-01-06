@@ -9,43 +9,47 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <title>Add cable form</title>
 </head>
-<body>
-<h2 align="center">Добавление кабеля из формы</h2>
-<div class="return-home">
-    <a href="/" class="btn-blue">На главную</a>
-</div>
-<div class="mt-5">
-    <input class="form-control" type="text" th:if="${notFoundCable == null}" name="cableType"
-           placeholder="Тип кабеля (КГ, RVV и т.д)">
-    <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableType}"
-           name="cableType"> <!--th:if="${notFoundCable != null}"-->
+<form action="/database/cable/showCableAddForm/addCableViaForm">
+    <h2 align="center">Добавление кабеля из формы</h2>
+    <div class="return-home">
+        <a href="/" class="btn-blue">На главную</a>
+    </div>
+        <div class="mt-5">
+            <input class="form-control" type="text" th:if="${notFoundCable == null}" name="cableType"
+                   placeholder="Тип кабеля (КГ, RVV и т.д)">
+            <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableType}"
+                   name="cableType">
 
-    <input class="form-control" type="text" th:if="${notFoundCable == null}" name="numberOfWires"
-           placeholder="Количество жил в кабеле, шт">
-    <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableNumberOfWires}"
-           name="numberOfWires">
+            <input class="form-control" type="text" th:if="${notFoundCable == null}" name="numberOfWires"
+                   placeholder="Количество жил в кабеле, шт">
+            <input class="form-control" type="text" th:if="${notFoundCable != null}"
+                   th:value="${notFoundCableNumberOfWires}"
+                   name="numberOfWires">
 
-    <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWire"
-           placeholder="Сечение жилы в кабеле, шт">
-    <input class="form-control" type="text" th:if="${notFoundCable != null}" th:value="${notFoundCableSectionOfWire}"
-           name="sectionOfWire">
+            <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWire"
+                   placeholder="Сечение жилы в кабеле, шт">
+            <input class="form-control" type="text" th:if="${notFoundCable != null}"
+                   th:value="${notFoundCableSectionOfWire}"
+                   name="sectionOfWire">
 
-    <input class="form-control" type="text" name="outerDiameter" placeholder="Наружный диаметр, мм">
-    <input class="form-control" type="text" name="weight" placeholder="Вес, кг/км">
-    <br>
-    <hr size="8" width="1200" color="black">
-    <br>
-    <input class="form-control" type="text" name="numberOfWiresSecond"
-           placeholder="Количество жил в кабеле, шт (для составного кабеля)">
-    <input class="form-control" type="text" name="sectionOfWireSecond"
-           placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
+            <input class="form-control" type="text" name="outerDiameter" placeholder="Наружный диаметр, мм">
+            <input class="form-control" type="text" name="weight" placeholder="Вес, кг/км">
+            <br>
+            <hr size="8" width="1200" color="black">
+            <br>
+            <input class="form-control" type="text" name="numberOfWiresSecond"
+                   placeholder="Количество жил в кабеле, шт (для составного кабеля)">
+            <input class="form-control" type="text" name="sectionOfWireSecond"
+                   placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
 
-</div>
-<div class="flex-parent center">
-    <a th:if="${notFoundCable == null}" href="/database/cable/showCableAddForm/addCableViaForm"
-       class="btn-orange margin-right">Добавить кабель в базу</a>
-    <a th:if="${notFoundCable != null}" href="/start/add-notFoundCable"
-       class="btn-orange margin-right">Добавить кабель в базу</a>
-</div>
-</body>
-</html>
+        </div>
+    <div class="flex-parent center">
+<!--        <input type="submit" th:if="${notFoundCable != null}" th:formaction ="@{/start/add-notFoundCable}"-->
+<!--           class="btn-orange margin-right">Добавить кабель в базу</input>-->
+<!--        <input type="submit" th:if="${notFoundCable == null and counter == 2}" th:formaction ="@{/start/add-notFoundCable-show-cableList}"-->
+<!--           class="btn-orange margin-right">Добавить кабель в базу</input>-->
+        <button type="submit" class="btn-orange margin-right">Добавить кабель в базу</button>
+            </div>
+        </form>
+            </body>
+        </html>
