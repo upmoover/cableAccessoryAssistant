@@ -81,7 +81,10 @@ public class MainController {
                 System.out.println(cable.getId() + " " + cable.getName());
             }
             //добавление в список кабелей, отсутствующих в базе данных
-            else notFoundCables.add(listCables.get(i));
+            else {
+                notFoundCables.add(listCables.get(i));
+                cables.clear();
+            }
         }
 
         System.out.println("Не найденные в базе кабели ===============");
@@ -116,8 +119,10 @@ public class MainController {
             label.counter = 1;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
             modelAndView.addObject("notFoundCable", notFoundCables.size());
             modelAndView.addObject("notFoundCableType", notFoundCables.get(0).getName().split("\\s")[0]);
-            modelAndView.addObject("notFoundCableNumberOfWires", notFoundCables.get(0).getName().split("\\s")[1].split("х")[0]);
-            modelAndView.addObject("notFoundCableSectionOfWire", notFoundCables.get(0).getName().split("\\s")[1].split("х")[1]);
+            modelAndView.addObject("notFoundCableNumberOfWires", notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[0]);
+            modelAndView.addObject("notFoundCableSectionOfWire", notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[1]);
+            modelAndView.addObject("notFoundCableNumberOfWiresSecond", notFoundCables.get(0).getName().split("\\+")[1].split("х")[0]);
+            modelAndView.addObject("notFoundCableSectionOfWireSecond", notFoundCables.get(0).getName().split("\\+")[1].split("х")[1]);
         }
 
         if (notFoundCables.size() == 0 & label.counter == 1) {

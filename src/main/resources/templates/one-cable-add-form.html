@@ -37,10 +37,15 @@
             <br>
             <hr size="8" width="1200" color="black">
             <br>
-            <input class="form-control" type="text" name="numberOfWiresSecond"
+            <input class="form-control" type="text" th:if="${notFoundCable == null}" name="numberOfWiresSecond"
                    placeholder="Количество жил в кабеле, шт (для составного кабеля)">
-            <input class="form-control" type="text" name="sectionOfWireSecond"
+            <input class="form-control" type="text" th:if="${notFoundCable != null}" name="numberOfWiresSecond"
+                   th:value="${notFoundCableNumberOfWiresSecond}" placeholder="Количество жил в кабеле, шт (для составного кабеля)">
+
+            <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWireSecond"
                    placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
+            <input class="form-control" type="text" th:if="${notFoundCable != null}" name="sectionOfWireSecond"
+                   th:value="${notFoundCableSectionOfWireSecond}" placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
 
         </div>
     <div class="flex-parent center">

@@ -83,13 +83,9 @@ public class CableController {
         else
             cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
         if (!CheckUniqueness.isCableInTheBase(cable)) {
-            cableService.saveOneCableToBase(cable);
+            chooseAccessoryAndSave(cable);
         }
-//        if (label.counter == 0)
-//            return "redirect:/database/cable/show-cable-add-form";
-//        else
-            return "redirect:/start/add-notFoundCable";
-        //TODO при добавлении одиночного кабеля назначить id соответствующего кабельного ввода
+        return "redirect:/start/add-notFoundCable";
     }
 
     //отобразить все кабели из базы (с возможностью удаления выбранного кабеля)
@@ -134,6 +130,19 @@ public class CableController {
             cableService.saveOneCableToBase(cables.get(i));
         }
         System.out.println("Кабели из файла добавлены в базу.");
+    }
+
+    //контроллер для поиска и назначения аксессуаров для кабеля
+    public void chooseAccessoryAndSave(Cable cable) {
+        CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cable.getOuterDiameter(), cable.getOuterDiameter());
+        cable.setCableGlandPg(cableglandpg);
+        CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(cable.getOuterDiameter(), cable.getOuterDiameter());
+        cable.setCableGlandMg(cableGlandMG);
+        CableGlandRgg cableGlandRgg = cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cable.getOuterDiameter());
+        cable.setCableGlandRgg(cableGlandRgg);
+        CorrugatedPipe corrugatedPipe = corrugatedPipeRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
+        cable.setCorrugatedPipe(corrugatedPipe);
+        cableService.saveOneCableToBase(cable);
     }
 
     //отобразить страницу редактирования базы данных кабелей

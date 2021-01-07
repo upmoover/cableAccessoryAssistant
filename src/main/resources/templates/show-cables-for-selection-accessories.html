@@ -16,66 +16,70 @@
     <a href="/" class="btn-blue">На главную</a>
 </div>
 <!--<div style="text-align: center" th:if="${#lists.isEmpty(notFoundCables)}">Соответствие БД: Все кабели из списка найдены в базе данных, можно продолжать работу</div>-->
-<div style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}"><b>Несоответствие БД</b>: Не все кабели из списка найдены в базе данных</div>
-<h4 style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">Добавьте недостающие кабели</h4>
+<div style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}"><b>Несоответствие БД</b>: Не все кабели из
+    списка найдены в базе данных
+</div>
 <div class="flex-parent center" style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">
-    <a href="/start/add-notFoundCable" class="btn-orange">Добавить кабели</a>
+    <a href="/start/add-notFoundCable" class="btn-orange">Добавить недостающие кабели</a>
 </div>
-<table align="center">
-    <thead class="thead-dark">
-    <tr>
-        <td>ID</td>
-        <td>Обозначение в проекте</td>
-        <td>Длина, м</td>
-        <td>Сальник</td>
-        <td style="text-align: center">Гофра</td>
-        <td>Начало кабеля</td>
-        <td></td>
-        <td>Конец кабеля</td>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-    <form th:method="POST" th:action="@{/start/get-attributes}">
-        <tr class="data-row" th:each="cable : ${cables}">
-            <td th:text="${cable.designation}" th:value="${cable.designation}">
-            <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
-            <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
-            <td>
-                <select name="cableGlandType">
-                    <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
-                    <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
-                    <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
-                </select>
-            </td>
-            <td>
-                <select name="corrugatedPipe">
-                    <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
-                    <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
-                    <option th:value="${cable.name} + '=metal'" th:text="Металл"></option>
-                </select>
-            </td>
-            <td align="center">
-                <select name="startLocation">
-                    <option style="align-self: center" th:each="location : ${locations}"
-                            th:value="${location.name} + ${cable.name} + '=startLocation'"
-                            th:text="${location.name}"></option>
-                </select>
-            </td>
-            <td>-------></td>
-            <td align="center">
-                <select name="endLocation">
-                    <option style="align-self: center" th:each="location : ${locations}"
-                            th:value="${location.name} + ${cable.name} + '=endLocation'"
-                            th:text="${location.name}"></option>
-                </select>
-            </td>
+<div th:if="${#lists.isEmpty(notFoundCables)}">
+    <table align="center">
+        <thead class="thead-dark">
+        <tr>
+            <td>ID</td>
+            <td>Обозначение в проекте</td>
+            <td>Длина, м</td>
+            <td>Сальник</td>
+            <td style="text-align: center">Гофра</td>
+            <td>Начало кабеля</td>
+            <td></td>
+            <td>Конец кабеля</td>
         </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <form th:method="POST" th:action="@{/start/get-attributes}">
+            <tr class="data-row" th:each="cable : ${cables}">
+                <td th:text="${cable.designation}" th:value="${cable.designation}">
+                <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
+                <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
+                <td>
+                    <select name="cableGlandType">
+                        <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
+                        <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
+                        <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
+                    </select>
+                </td>
+                <td>
+                    <select name="corrugatedPipe">
+                        <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
+                        <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
+                        <option th:value="${cable.name} + '=metal'" th:text="Металл"></option>
+                    </select>
+                </td>
+                <td align="center">
+                    <select name="startLocation">
+                        <option style="align-self: center" th:each="location : ${locations}"
+                                th:value="${location.name} + ${cable.name} + '=startLocation'"
+                                th:text="${location.name}"></option>
+                    </select>
+                </td>
+                <td>-------></td>
+                <td align="center">
+                    <select name="endLocation">
+                        <option style="align-self: center" th:each="location : ${locations}"
+                                th:value="${location.name} + ${cable.name} + '=endLocation'"
+                                th:text="${location.name}"></option>
+                    </select>
+                </td>
+            </tr>
+        </form>
+    </table>
     </form>
-</table>
-</form>
-</body>
-<div class="flex-parent center">
-    <button type="submit" class="btn-green">Подобрать аксессуары</button>
+
+    <div class="flex-parent center">
+        <button type="submit" class="btn-green">Подобрать аксессуары</button>
+    </div>
 </div>
+</body>
 </html>
