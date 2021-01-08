@@ -13,7 +13,7 @@ import org.upmoover.cableAccessoryAssistant.repositories.*;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.CheckUniqueness;
-import org.upmoover.cableAccessoryAssistant.utils.Label;
+import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
 import java.util.ArrayList;
 
@@ -66,9 +66,7 @@ public class CableController {
 
     //отобразить страницу формы добавления кабеля
     @RequestMapping("/show-cable-add-form")
-    public String showCableAddForm() {
-        Label label = Label.getInstance();
-        label.counter = 1;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
+    public String showCableAddForm() {//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
         return "one-cable-add-form";
     }
 
@@ -76,9 +74,12 @@ public class CableController {
     @RequestMapping("/showCableAddForm/addCableViaForm")
     public String saveOneCableToBase(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight, String numberOfWiresSecond, String sectionOfWireSecond) {
 
+        if (Shared.notFoundCables.size() > 0)
+            Shared.notFoundCables.remove(0);
+
         Cable cable;
 
-        if (numberOfWiresSecond.equals("") || sectionOfWireSecond.equals(""))
+        if (numberOfWiresSecond == null || sectionOfWireSecond == null || numberOfWiresSecond.equals("") || sectionOfWireSecond.equals(""))
             cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
         else
             cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));

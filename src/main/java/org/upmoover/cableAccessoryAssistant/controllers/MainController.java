@@ -2,9 +2,7 @@ package org.upmoover.cableAccessoryAssistant.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
@@ -12,9 +10,8 @@ import org.upmoover.cableAccessoryAssistant.entities.Location;
 import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
-import org.upmoover.cableAccessoryAssistant.utils.Label;
+import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
-import javax.xml.transform.sax.SAXResult;
 import java.util.ArrayList;
 
 @Controller
@@ -24,9 +21,10 @@ public class MainController {
     ArrayList<Cable> listCables = new ArrayList<>();
 
     ArrayList<Cable> cables = new ArrayList<>();
-    ArrayList<Cable> notFoundCables = new ArrayList<>();
 
     CableService cableService;
+
+    boolean label = false;
 
     @Autowired
     public void setCableService(CableService cableService) {
@@ -64,7 +62,6 @@ public class MainController {
     public ModelAndView readCablesList(@RequestParam String pathFile) {
         this.pathFile = pathFile;
         listCables.clear();
-        notFoundCables.clear();
         cables.clear();
         listCables = CableFileReader.readFile(this.pathFile);
         return showCableList(listCables);
@@ -74,6 +71,8 @@ public class MainController {
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         Cable cable;
         ModelAndView modelAndView = new ModelAndView();
+        Shared shared = new Shared();
+
         //поиск кабеля из списка в базе: если кабель присутствует в БД - он выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
@@ -82,21 +81,21 @@ public class MainController {
             }
             //добавление в список кабелей, отсутствующих в базе данных
             else {
-                notFoundCables.add(listCables.get(i));
+                Shared.notFoundCables.add(listCables.get(i));
                 cables.clear();
             }
         }
 
         System.out.println("Не найденные в базе кабели ===============");
-        for (int i = 0; i < notFoundCables.size(); i++) {
-            System.out.println(notFoundCables.get(i).getName());
+        for (int i = 0; i < Shared.notFoundCables.size(); i++) {
+            System.out.println(Shared.notFoundCables.get(i).getName());
         }
 
         modelAndView.addObject("cables", cables);
         //получение из базы списка местоположений
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
         modelAndView.addObject("locations", locations);
-        modelAndView.addObject("notFoundCables", notFoundCables);
+        modelAndView.addObject("notFoundCables", Shared.notFoundCables);
         modelAndView.setViewName("show-cables-for-selection-accessories");
         return modelAndView;
     }
@@ -113,27 +112,39 @@ public class MainController {
     @GetMapping("/start/add-notFoundCable")
     public ModelAndView addNotFoundCable() {
         ModelAndView modelAndView = new ModelAndView();
-        Label label = Label.getInstance();
         ArrayList<String> splitCable = new ArrayList<>();
-        if (notFoundCables.size() > 0) {
-            label.counter = 1;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
-            modelAndView.addObject("notFoundCable", notFoundCables.size());
-            modelAndView.addObject("notFoundCableType", notFoundCables.get(0).getName().split("\\s")[0]);
-            modelAndView.addObject("notFoundCableNumberOfWires", notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[0]);
-            modelAndView.addObject("notFoundCableSectionOfWire", notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[1]);
-            modelAndView.addObject("notFoundCableNumberOfWiresSecond", notFoundCables.get(0).getName().split("\\+")[1].split("х")[0]);
-            modelAndView.addObject("notFoundCableSectionOfWireSecond", notFoundCables.get(0).getName().split("\\+")[1].split("х")[1]);
+        if (Shared.notFoundCables.size() > 0) {
+            boolean secondSection = false;
+            label = true;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
+            modelAndView.addObject("notFoundCable", Shared.notFoundCables.size());
+            modelAndView.addObject("notFoundCableType", Shared.notFoundCables.get(0).getName().split("\\s")[0]);
+            if (!Shared.notFoundCables.get(0).getName().contains("+")) {
+                modelAndView.addObject("notFoundCableNumberOfWires", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[0]);
+                modelAndView.addObject("notFoundCableSectionOfWire", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[1]);
+            } else {
+                secondSection = true;
+                modelAndView.addObject("secondSection", secondSection);
+                modelAndView.addObject("notFoundCableNumberOfWires", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[0]);
+                modelAndView.addObject("notFoundCableSectionOfWire", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[1]);
+                modelAndView.addObject("notFoundCableNumberOfWiresSecond", Shared.notFoundCables.get(0).getName().split("\\+")[1].split("х")[0]);
+                modelAndView.addObject("notFoundCableSectionOfWireSecond", Shared.notFoundCables.get(0).getName().split("\\+")[1].split("х")[1]);
+            }
         }
 
-        if (notFoundCables.size() == 0 & label.counter == 1) {
+        if (Shared.notFoundCables.size() == 0 & label) {
             splitCable.clear();
             modelAndView.addObject("notFoundCable", null);
-            modelAndView.addObject("counter", label.counter);
-            label.counter = 0;
+            label = false;
             return showCableList(listCables);
         }
-        if (notFoundCables.size() > 0) notFoundCables.remove(0);
-        modelAndView.setViewName("one-cable-add-form");
+
+        if (Shared.notFoundCables.size() == 0 & !label) {
+            modelAndView.setViewName("one-cable-add-form");
+            return modelAndView;
+        }
+
+        if (Shared.notFoundCables.size() > 0)
+            modelAndView.setViewName("one-cable-add-form");
         return modelAndView;
     }
 

@@ -28,23 +28,22 @@
 
             <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWire"
                    placeholder="Сечение жилы в кабеле, шт">
-            <input class="form-control" type="text" th:if="${notFoundCable != null}"
-                   th:value="${notFoundCableSectionOfWire}"
-                   name="sectionOfWire">
+            <input class="form-control" type="text" th:if="${notFoundCable != null}" name="sectionOfWire"
+                   th:value="${notFoundCableSectionOfWire}">
 
             <input class="form-control" type="text" name="outerDiameter" placeholder="Наружный диаметр, мм">
             <input class="form-control" type="text" name="weight" placeholder="Вес, кг/км">
             <br>
-            <hr size="8" width="1200" color="black">
+            <hr size="8" width="1200" color="black" th:if="${notFoundCable != null and secondSection != null}">
             <br>
             <input class="form-control" type="text" th:if="${notFoundCable == null}" name="numberOfWiresSecond"
                    placeholder="Количество жил в кабеле, шт (для составного кабеля)">
-            <input class="form-control" type="text" th:if="${notFoundCable != null}" name="numberOfWiresSecond"
+            <input class="form-control" type="text" th:if="${notFoundCable != null and secondSection != null}" name="numberOfWiresSecond"
                    th:value="${notFoundCableNumberOfWiresSecond}" placeholder="Количество жил в кабеле, шт (для составного кабеля)">
 
             <input class="form-control" type="text" th:if="${notFoundCable == null}" name="sectionOfWireSecond"
                    placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
-            <input class="form-control" type="text" th:if="${notFoundCable != null}" name="sectionOfWireSecond"
+            <input class="form-control" type="text" th:if="${notFoundCable != null and secondSection != null}" name="sectionOfWireSecond"
                    th:value="${notFoundCableSectionOfWireSecond}" placeholder="Сечение жилы в кабеле, шт (для составного кабеля)">
 
         </div>
