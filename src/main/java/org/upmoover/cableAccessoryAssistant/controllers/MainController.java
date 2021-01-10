@@ -71,16 +71,18 @@ public class MainController {
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         Cable cable;
         ModelAndView modelAndView = new ModelAndView();
-        Shared shared = new Shared();
 
-        //поиск кабеля из списка в базе: если кабель присутствует в БД - он выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД
+        //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
-                cables.add(cable);
+                cables.add(listCables.get(i));
+                if (Shared.notFoundCables.isEmpty())
+                cables.get(i).setId(cable.getId());
                 System.out.println(cable.getId() + " " + cable.getName());
             }
             //добавление в список кабелей, отсутствующих в базе данных
             else {
+                if (!Shared.notFoundCables.contains(listCables.get(i)))
                 Shared.notFoundCables.add(listCables.get(i));
                 cables.clear();
             }
@@ -102,9 +104,9 @@ public class MainController {
 
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public void getCableAttributes(@RequestParam(value = "cableGlandType", required = false) String[] cableGlandType, @RequestParam(value = "startLocation", required = false) String[] startLocations) {
+    public void getCableAttributes(@RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandType, @RequestParam(value = "startLocation", required = false) String[] startLocations) {
         for (int i = 0; i < cableGlandType.length; i++) {
-            System.out.println("name: " + cableGlandType[i].split("=")[0] + ", cableGland: " + cableGlandType[i].split("=")[1] + "location: " + startLocations[i].split("=")[0]);
+            System.out.println(" name: " + cableGlandType[i].split("=")[0] + ", cableGland: " + cableGlandType[i].split("=")[1] + ", location: " + startLocations[i].split("=")[0]);
         }
     }
 

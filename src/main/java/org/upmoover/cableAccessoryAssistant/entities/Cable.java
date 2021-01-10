@@ -28,6 +28,16 @@ public class Cable {
     private String designation;
     @Transient
     private Float length;
+    @Transient
+    private boolean isSelectedForDelete;
+
+    public boolean isSelectedForDelete() {
+        return isSelectedForDelete;
+    }
+
+    public void setSelectedForDelete(boolean selectedForDelete) {
+        isSelectedForDelete = selectedForDelete;
+    }
 
     //поле для связи с таблицей кабельных вводов (cableGland)
     @ManyToOne()

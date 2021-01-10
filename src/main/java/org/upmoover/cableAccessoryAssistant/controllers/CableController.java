@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class CableController {
 
     CableRepository cableRepository;
+    public ArrayList<Cable> cables;
 
     @Autowired
     public void setCableRepository(CableRepository cableRepository) {
@@ -92,7 +93,6 @@ public class CableController {
     //отобразить все кабели из базы (с возможностью удаления выбранного кабеля)
     @RequestMapping("/show-all-cables-from-base")
     public String showAllCablesFromBase(Model model) {
-        ArrayList<Cable> cables;
         cables = cableService.findAllFromBase();
         model.addAttribute("cables", cables);
         return "show-all-cables-from-base";
@@ -156,6 +156,15 @@ public class CableController {
     @RequestMapping("delete-all-cables-from-base")
     public String deleteAllFromBase() {
         cableRepository.deleteAll();
+        return "redirect:/database/cable/show-all-cables-from-base";
+    }
+
+    @RequestMapping("delete-selected-cables")
+    public String deleteSelectedCables(@RequestParam(value = "isSelected", required = false) long[] isSelected) {
+
+        for (int i = 0; i < isSelected.length; i++) {
+         cableRepository.deleteById(isSelected[i]);
+        }
         return "redirect:/database/cable/show-all-cables-from-base";
     }
 
