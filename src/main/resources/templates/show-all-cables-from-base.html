@@ -21,29 +21,35 @@
     </div>
 </div>
 <div align="center">
-<td><a href="/database/cable/delete-all-cables-from-base" class="btn btn-danger">Удалить ВСЕ кабели из базы данных</a></td>
+    <td><a href="/database/cable/delete-all-cables-from-base" class="btn btn-danger">Удалить ВСЕ кабели из базы
+        данных</a></td>
 </div>
 <form th:method="POST" th:action="@{/database/cable/delete-selected-cables}">
-<table>
-    <thead class="thead-dark">
-    <tr>
-        <td>ID</td>
-        <td>Наименование кабеля</td>
-        <td>Наружный диаметр, мм</td>
-        <td>Вес, кг/км</td>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="cable : ${cables}">
-        <td th:text="${cable.id}">
-        <td th:text="${cable.name}">
-        <td th:text="${cable.outerDiameter}">
-        <td th:text="${cable.weight}">
-        <td><a th:href="@{'/database/cable/delete-cable-by-id/' + ${cable.id}}" class="btn btn-danger">Удалить</a></td>
-        <td><input type="checkbox" name="isSelected" th:value="${cable.id}"/></td>
-    </tr>
-    </tbody>
-</table>
+    <table>
+        <thead class="thead-dark">
+        <tr>
+            <td>ID</td>
+            <td>Наименование кабеля</td>
+            <td>Наружный диаметр, мм</td>
+            <td>Вес, кг/км</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cable : ${cables}">
+            <td th:text="${cable.id}">
+            <td th:text="${cable.name}">
+            <td th:text="${cable.outerDiameter}">
+            <td th:text="${cable.weight}">
+            <td><a th:href="@{'/database/cable/delete-cable-by-id/' + ${cable.id}}" class="btn btn-danger">Удалить</a>
+            </td>
+            <div class="checkboxOverride">
+                <td>
+                    <input type="checkbox" name="isSelected" th:value="${cable.id}"/>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
     <div class="return-home">
         <button type="submit" class="btn-blue">Удалить помеченные кабели</button>
     </div>
