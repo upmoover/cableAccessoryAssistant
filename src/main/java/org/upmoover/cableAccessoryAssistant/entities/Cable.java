@@ -47,7 +47,7 @@ public class Cable {
     @ManyToOne()
     @JoinColumn(name = "cableGlandMgId")
     private CableGlandMG cableGlandMg;
-    
+
     @ManyToOne()
     @JoinColumn(name = "cableGlandRggId")
     private CableGlandRgg cableGlandRgg;
@@ -167,5 +167,20 @@ public class Cable {
                 ", outerDiameter=" + outerDiameter +
                 ", weight=" + weight +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        char[] charCableName = this.getName().toCharArray();
+        int sum = 0;
+        for (int i = 0; i < charCableName.length; i++) {
+            sum = sum + charCableName[i] + i;
+        }
+        return sum;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.hashCode() == hashCode();
     }
 }

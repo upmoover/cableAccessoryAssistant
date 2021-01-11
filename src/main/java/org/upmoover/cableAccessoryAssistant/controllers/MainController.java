@@ -76,22 +76,21 @@ public class MainController {
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
                 cables.add(listCables.get(i));
-                if (Shared.notFoundCables.isEmpty())
-                cables.get(i).setId(cable.getId());
+                if (Shared.uniqueNotFoundCables.isEmpty())
+                    cables.get(i).setId(cable.getId());
                 System.out.println(cable.getId() + " " + cable.getName());
             }
             //добавление в список кабелей, отсутствующих в базе данных
             else {
-                if (!Shared.notFoundCables.contains(listCables.get(i)))
-                Shared.notFoundCables.add(listCables.get(i));
-                cables.clear();
+                Shared.uniqueNotFoundCables.add(listCables.get(i));
+                int a = 'x';
+                int b = 'х';
+                System.out.println(a);
+                System.out.println(b);
             }
         }
 
-        System.out.println("Не найденные в базе кабели ===============");
-        for (int i = 0; i < Shared.notFoundCables.size(); i++) {
-            System.out.println(Shared.notFoundCables.get(i).getName());
-        }
+        Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
 
         modelAndView.addObject("cables", cables);
         //получение из базы списка местоположений
@@ -121,8 +120,8 @@ public class MainController {
             modelAndView.addObject("notFoundCable", Shared.notFoundCables.size());
             modelAndView.addObject("notFoundCableType", Shared.notFoundCables.get(0).getName().split("\\s")[0]);
             if (!Shared.notFoundCables.get(0).getName().contains("+")) {
-                modelAndView.addObject("notFoundCableNumberOfWires", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[0]);
-                modelAndView.addObject("notFoundCableSectionOfWire", Shared.notFoundCables.get(0).getName().split("\\+")[0].split("\\s")[1].split("х")[1]);
+                modelAndView.addObject("notFoundCableNumberOfWires", Shared.notFoundCables.get(0).getName().split("\\s")[1].split("х")[0]);
+                modelAndView.addObject("notFoundCableSectionOfWire", Shared.notFoundCables.get(0).getName().split("\\s")[1].split("х")[1]);
             } else {
                 secondSection = true;
                 modelAndView.addObject("secondSection", secondSection);
