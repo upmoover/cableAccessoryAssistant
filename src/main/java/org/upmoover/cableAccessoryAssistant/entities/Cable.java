@@ -181,6 +181,7 @@ public class Cable {
 
     @Override
     public boolean equals(Object obj) {
-        return this.hashCode() == hashCode();
+        if(this == null || obj == null) return false;
+        return this.hashCode() == obj.hashCode();
     }
 }

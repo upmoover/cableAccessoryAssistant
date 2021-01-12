@@ -76,23 +76,21 @@ public class MainController {
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
                 cables.add(listCables.get(i));
-                if (Shared.uniqueNotFoundCables.isEmpty())
+                if (Shared.uniqueNotFoundCables.isEmpty()) {
                     cables.get(i).setId(cable.getId());
+                }
                 System.out.println(cable.getId() + " " + cable.getName());
             }
             //добавление в список кабелей, отсутствующих в базе данных
             else {
                 Shared.uniqueNotFoundCables.add(listCables.get(i));
-                int a = 'x';
-                int b = 'х';
-                System.out.println(a);
-                System.out.println(b);
             }
         }
 
-        Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
+        if (!Shared.uniqueNotFoundCables.isEmpty()) cables.clear();
 
-        modelAndView.addObject("cables", cables);
+        Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
+            modelAndView.addObject("cables", cables);
         //получение из базы списка местоположений
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
         modelAndView.addObject("locations", locations);
@@ -130,6 +128,7 @@ public class MainController {
                 modelAndView.addObject("notFoundCableNumberOfWiresSecond", Shared.notFoundCables.get(0).getName().split("\\+")[1].split("х")[0]);
                 modelAndView.addObject("notFoundCableSectionOfWireSecond", Shared.notFoundCables.get(0).getName().split("\\+")[1].split("х")[1]);
             }
+            Shared.uniqueNotFoundCables.remove(Shared.notFoundCables.get(0));
         }
 
         if (Shared.notFoundCables.size() == 0 & label) {
@@ -151,7 +150,7 @@ public class MainController {
 
     @GetMapping("/start/add-notFoundCable-show-cableList")
     public ModelAndView saveToBaseShowCables() {
-
+//TODO разобраться
         return showCableList(listCables);
     }
 }
