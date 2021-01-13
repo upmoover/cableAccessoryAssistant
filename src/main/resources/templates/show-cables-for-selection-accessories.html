@@ -11,7 +11,7 @@
     <title>Show all cables from base</title>
 </head>
 <body>
-<h2 align="center">Отобразить кабели для подбора аксессуаров</h2>
+<h2 align="center">Список кабелей для подбора аксессуаров</h2>
 <div class="flex-parent center">
     <a href="/" class="btn-blue">На главную</a>
 </div>
@@ -48,44 +48,44 @@
                 <td align="center">
                     <select name="startLocation">
                         <option style="align-self: center" th:each="location : ${locations}"
-                                th:value="${location.name} + ${cable.name} + '=startLocation'"
+                                th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
                                 th:text="${location.name}"></option>
                     </select>
                 </td>
                 <td>
                     <select name="cableGlandTypeStart">
-                        <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
-                        <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
-                        <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
                     </select>
                 </td>
                 <td>
                     <select name="corrugatedPipeStart">
-                        <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
-                        <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
-                        <option th:value="${cable.name} + '=metal'" th:text="Металл"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'" th:text="Отсутств."></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'" th:text="Пластик"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
                     </select>
                 </td>
                 <td>-------></td>
                 <td align="center">
                     <select name="endLocation">
                         <option style="align-self: center" th:each="location : ${locations}"
-                                th:value="${location.name} + ${cable.name} + '=endLocation'"
+                                th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
                                 th:text="${location.name}"></option>
                     </select>
                 </td>
                 <td>
                     <select name="corrugatedPipeEnd">
-                        <option th:value="${cable.name} + '=none'" th:text="Отсутств."></option>
-                        <option th:value="${cable.name} + '=plastic'" th:text="Пластик"></option>
-                        <option th:value="${cable.name} + '=metal'" th:text="Металл"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'" th:text="Отсутств."></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'" th:text="Пластик"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
                     </select>
                 </td>
                 <td>
                     <select name="cableGlandTypeEnd">
-                        <option th:value="${cable.name} + '=PG'" th:text="PG"></option>
-                        <option th:value="${cable.name} + '=MG'" th:text="MG"></option>
-                        <option th:value="${cable.name} + '=RGG'" th:text="RGG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
                     </select>
                 </td>
             </tr>

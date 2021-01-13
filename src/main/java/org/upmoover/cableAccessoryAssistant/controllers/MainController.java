@@ -6,13 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
+import org.upmoover.cableAccessoryAssistant.entities.CableGland;
+import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
 import org.upmoover.cableAccessoryAssistant.entities.Location;
+import org.upmoover.cableAccessoryAssistant.repositories.CableGlandPgRepository;
 import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
-import java.util.ArrayList;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -36,6 +39,13 @@ public class MainController {
     @Autowired
     public void setLocationsRepository(LocationsRepository locationsRepository) {
         this.locationsRepository = locationsRepository;
+    }
+
+    CableGlandPgRepository cableGlandPgRepository;
+
+    @Autowired
+    public void setCableGlandPgRepository(CableGlandPgRepository cableGlandPgRepository) {
+        this.cableGlandPgRepository = cableGlandPgRepository;
     }
 
     //вернуть стартовую страницу
@@ -78,8 +88,10 @@ public class MainController {
                 cables.add(listCables.get(i));
                 if (Shared.uniqueNotFoundCables.isEmpty()) {
                     cables.get(i).setId(cable.getId());
+                    cables.get(i).setCableGlandRgg(cable.getCableGlandRgg());
+                    cables.get(i).setCableGlandPg(cable.getCableGlandPg());
+                    cables.get(i).setCableGlandMg(cable.getCableGlandMg());
                 }
-                System.out.println(cable.getId() + " " + cable.getName());
             }
             //добавление в список кабелей, отсутствующих в базе данных
             else {
@@ -90,7 +102,7 @@ public class MainController {
         if (!Shared.uniqueNotFoundCables.isEmpty()) cables.clear();
 
         Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
-            modelAndView.addObject("cables", cables);
+        modelAndView.addObject("cables", cables);
         //получение из базы списка местоположений
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
         modelAndView.addObject("locations", locations);
@@ -101,10 +113,74 @@ public class MainController {
 
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public void getCableAttributes(@RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandType, @RequestParam(value = "startLocation", required = false) String[] startLocations) {
-        for (int i = 0; i < cableGlandType.length; i++) {
-            System.out.println(" name: " + cableGlandType[i].split("=")[0] + ", cableGland: " + cableGlandType[i].split("=")[1] + ", location: " + startLocations[i].split("=")[0]);
+    public void getCableAttributes(@RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
+
+        ArrayList<Location> locationsList = new ArrayList<>();
+
+        for (Location location : locationsRepository.findAll()) {
+            locationsList.add(location);
         }
+
+        for (int i = 0; i < cables.size(); i++) {
+            cables.get(i).setStartLocation(startLocation[i].split("=")[1]);
+            cables.get(i).setCableGlandTypeStart(cableGlandTypeStart[i].split("=")[1]);
+            cables.get(i).setCorrugatedPipeStart(corrugatedPipeStart[i].split("=")[1]);
+            cables.get(i).setEndLocation(endLocation[i].split("=")[1]);
+            cables.get(i).setCorrugatedPipeEnd(corrugatedPipeEnd[i].split("=")[1]);
+            cables.get(i).setCableGlandTypeEnd(cableGlandTypeEnd[i].split("=")[1]);
+
+            String cableTypeStart = cables.get(i).getCableGlandTypeStart();
+            switch (cableTypeStart) {
+                case ("PG"):
+                    for (int j = 0; j < locationsList.size(); j++) {
+                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
+                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
+                    }
+                    break;
+
+                case ("MG"):
+                    for (int j = 0; j < locationsList.size(); j++) {
+                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
+                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
+                    }
+                    break;
+
+                case ("RGG"):
+                    for (int j = 0; j < locationsList.size(); j++) {
+                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
+                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
+                    }
+                    break;
+            }
+
+//            System.out.println(cables.get(i).getDesignation() + " " + cables.get(i).getCableGlandTypeStart());
+
+        }
+
+        for (Location location : locationsList
+        ) {
+            System.out.println(location.getName() + ":");
+
+            /*for (Object cableGland : location.getGlandsList()
+            ) {
+                HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
+                Collections.frequency();
+                CableGland cg = (CableGland) cableGland;
+                System.out.println(cg.getName());
+            }*/
+
+            HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
+
+            for (Object cableGland : uniqueCableGlands
+            ) {
+                CableGland cg = (CableGland) cableGland;
+                System.out.println(cg.getName() + " = " + Collections.frequency(location.getGlandsList(), cableGland) + " шт.");
+            }
+
+            System.out.println("==================");
+        }
+
+
     }
 
     //вывести страницу занесения кабеля в БД с заполненными полями для добавляемого кабеля (заполняются поля "тип" и "количество жил", т. к. они есть в файле со списком кабелей для подбора аксессуаров)

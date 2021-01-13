@@ -30,6 +30,72 @@ public class Cable {
     private Float length;
     @Transient
     private boolean isSelectedForDelete;
+    @Transient
+    private String startLocation;
+    @Transient
+    private String cableGlandTypeStart;
+    @Transient
+    private String corrugatedPipeStart;
+    @Transient
+    private String endLocation;
+    @Transient
+    private String corrugatedPipeEnd;
+    @Transient
+    private String cableGlandTypeEnd;
+
+    //--------
+
+    public String getStartLocation() {
+        return startLocation;
+    }
+
+    public void setStartLocation(String startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    public String getCableGlandTypeStart() {
+        return cableGlandTypeStart;
+    }
+
+    public void setCableGlandTypeStart(String cableGlandTypeStart) {
+        this.cableGlandTypeStart = cableGlandTypeStart;
+    }
+
+    public String getCorrugatedPipeStart() {
+        return corrugatedPipeStart;
+    }
+
+    public void setCorrugatedPipeStart(String corrugatedPipeStart) {
+        this.corrugatedPipeStart = corrugatedPipeStart;
+    }
+
+    public String getEndLocation() {
+        return endLocation;
+    }
+
+    public void setEndLocation(String endLocation) {
+        this.endLocation = endLocation;
+    }
+
+    public String getCorrugatedPipeEnd() {
+        return corrugatedPipeEnd;
+    }
+
+    public void setCorrugatedPipeEnd(String corrugatedPipeEnd) {
+        this.corrugatedPipeEnd = corrugatedPipeEnd;
+    }
+
+    public String getCableGlandTypeEnd() {
+        return cableGlandTypeEnd;
+    }
+
+    public void setCableGlandTypeEnd(String cableGlandTypeEnd) {
+        this.cableGlandTypeEnd = cableGlandTypeEnd;
+    }
+
+
+    //--------
+
 
     public boolean isSelectedForDelete() {
         return isSelectedForDelete;
@@ -181,7 +247,7 @@ public class Cable {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == null || obj == null) return false;
+        if (this == null || obj == null) return false;
         return this.hashCode() == obj.hashCode();
     }
 }

@@ -1,6 +1,7 @@
 package org.upmoover.cableAccessoryAssistant.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "Locations")
@@ -13,7 +14,19 @@ public class Location {
     @Column(name = "name")
     private String name;
 
+    @Transient
+    private ArrayList<Object> glandsList;
+
     public Location() {
+        this.glandsList = new ArrayList<>();
+    }
+
+    public void setGlandsList(ArrayList<Object> glandsList) {
+        this.glandsList = glandsList;
+    }
+
+    public ArrayList<Object> getGlandsList() {
+        return glandsList;
     }
 
     public Location(String name) {
