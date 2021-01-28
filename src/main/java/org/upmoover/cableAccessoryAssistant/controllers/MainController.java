@@ -115,71 +115,7 @@ public class MainController {
     @ResponseStatus(value = HttpStatus.OK)
     public void getCableAttributes(@RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
 
-        ArrayList<Location> locationsList = new ArrayList<>();
-
-        for (Location location : locationsRepository.findAll()) {
-            locationsList.add(location);
-        }
-
-        for (int i = 0; i < cables.size(); i++) {
-            cables.get(i).setStartLocation(startLocation[i].split("=")[1]);
-            cables.get(i).setCableGlandTypeStart(cableGlandTypeStart[i].split("=")[1]);
-            cables.get(i).setCorrugatedPipeStart(corrugatedPipeStart[i].split("=")[1]);
-            cables.get(i).setEndLocation(endLocation[i].split("=")[1]);
-            cables.get(i).setCorrugatedPipeEnd(corrugatedPipeEnd[i].split("=")[1]);
-            cables.get(i).setCableGlandTypeEnd(cableGlandTypeEnd[i].split("=")[1]);
-
-            String cableTypeStart = cables.get(i).getCableGlandTypeStart();
-            switch (cableTypeStart) {
-                case ("PG"):
-                    for (int j = 0; j < locationsList.size(); j++) {
-                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
-                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
-                    }
-                    break;
-
-                case ("MG"):
-                    for (int j = 0; j < locationsList.size(); j++) {
-                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
-                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
-                    }
-                    break;
-
-                case ("RGG"):
-                    for (int j = 0; j < locationsList.size(); j++) {
-                        if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
-                            locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
-                    }
-                    break;
-            }
-
-//            System.out.println(cables.get(i).getDesignation() + " " + cables.get(i).getCableGlandTypeStart());
-
-        }
-
-        for (Location location : locationsList
-        ) {
-            System.out.println(location.getName() + ":");
-
-            /*for (Object cableGland : location.getGlandsList()
-            ) {
-                HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
-                Collections.frequency();
-                CableGland cg = (CableGland) cableGland;
-                System.out.println(cg.getName());
-            }*/
-
-            HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
-
-            for (Object cableGland : uniqueCableGlands
-            ) {
-                CableGland cg = (CableGland) cableGland;
-                System.out.println(cg.getName() + " = " + Collections.frequency(location.getGlandsList(), cableGland) + " шт.");
-            }
-
-            System.out.println("==================");
-        }
-
+        cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd);
 
     }
 
