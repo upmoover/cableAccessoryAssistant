@@ -3,11 +3,10 @@ package org.upmoover.cableAccessoryAssistant.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
-import org.upmoover.cableAccessoryAssistant.entities.CableGland;
-import org.upmoover.cableAccessoryAssistant.entities.CableGlandPG;
 import org.upmoover.cableAccessoryAssistant.entities.Location;
 import org.upmoover.cableAccessoryAssistant.repositories.CableGlandPgRepository;
 import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
@@ -113,10 +112,9 @@ public class MainController {
 
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public void getCableAttributes(@RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
-
-        cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd);
-
+    public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
+        model.addAttribute("locationList", cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd));
+        return "show-results";
     }
 
     //вывести страницу занесения кабеля в БД с заполненными полями для добавляемого кабеля (заполняются поля "тип" и "количество жил", т. к. они есть в файле со списком кабелей для подбора аксессуаров)

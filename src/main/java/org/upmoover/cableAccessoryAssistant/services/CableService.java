@@ -11,6 +11,7 @@ import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 
 @Service
@@ -71,9 +72,10 @@ public class CableService {
     }
 
     //метод для подсчета аксессуаров для разных местоположений
-    public void countAccessories(ArrayList<Cable> cables, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
+    public HashMap<String, ArrayList<String>> countAccessories(ArrayList<Cable> cables, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
 
         ArrayList<Location> locationsList = new ArrayList<>();
+        HashMap<String, ArrayList<String>> locationList = new HashMap<>();
 
         for (Location location : locationsRepository.findAll()) {
             locationsList.add(location);
@@ -141,17 +143,18 @@ public class CableService {
             System.out.println(location.getName() + ":");
 
             HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
+            ArrayList<String> accessoryQuantity = new ArrayList<>();
+            accessoryQuantity.clear();
 
             for (Object cableGland : uniqueCableGlands
             ) {
                 CableGland cg = (CableGland) cableGland;
-                System.out.println(cg.getName() + " = " + Collections.frequency(location.getGlandsList(), cableGland) + " шт.");
+                accessoryQuantity.add(cg.getName() + " = " + Collections.frequency(location.getGlandsList(), cableGland) + " шт.");
             }
-
-            System.out.println("==================");
+            if (location.getGlandsList().size() != 0)
+                locationList.put(location.toString(), accessoryQuantity);
         }
-
-
+        return locationList;
     }
 
 }
