@@ -44,11 +44,18 @@ public class CableController {
         this.cableGlandMgRepository = cableGlandMgRepository;
     }
 
-    CorrugatedPipeRepository corrugatedPipeRepository;
+    CorrugatedPipePlasticRepository corrugatedPipePlasticRepository;
 
     @Autowired
-    public void setCorrugatedPipeRepository(CorrugatedPipeRepository corrugatedPipeRepository) {
-        this.corrugatedPipeRepository = corrugatedPipeRepository;
+    public void setCorrugatedPipePlasticRepository(CorrugatedPipePlasticRepository corrugatedPipePlasticRepository) {
+        this.corrugatedPipePlasticRepository = corrugatedPipePlasticRepository;
+    }
+
+    CorrugatedPipeMetalRepository corrugatedPipeMetalRepository;
+
+    @Autowired
+    public void setCorrugatedPipeMetalRepository(CorrugatedPipeMetalRepository corrugatedPipeMetalRepository) {
+        this.corrugatedPipeMetalRepository = corrugatedPipeMetalRepository;
     }
 
     CableGlandRggRepository cableGlandRggRepository;
@@ -75,7 +82,7 @@ public class CableController {
     @RequestMapping("/showCableAddForm/addCableViaForm")
     public String saveOneCableToBase(@RequestParam String cableType, String numberOfWires, String sectionOfWire, String outerDiameter, String weight, String numberOfWiresSecond, String sectionOfWireSecond) {
 
-        if (Shared.notFoundCables.size() > 0)
+        if (Shared.notFoundCables != null && Shared.notFoundCables.size() > 0)
             Shared.notFoundCables.remove(0);
 
         Cable cable;
@@ -113,8 +120,8 @@ public class CableController {
 
     //сохранить кабели в базу данных список кабелей из txt файла
     @RequestMapping("/file-path")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void addCableFromFile(@RequestParam String pathFile) {
+//    @ResponseStatus(value = HttpStatus.OK)
+    public String addCableFromFile(@RequestParam String pathFile) {
         //получение списка кабелей из файла для добавления в базу данных
         ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
         //проход по полученному списку кабелей, для подбора к каждому из кабелей аксессуаров из соответствующих таблиц
@@ -126,11 +133,16 @@ public class CableController {
             cables.get(i).setCableGlandMg(cableGlandMG);
             CableGlandRgg cableGlandRgg = cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter());
             cables.get(i).setCableGlandRgg(cableGlandRgg);
-            CorrugatedPipe corrugatedPipe = corrugatedPipeRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter());
-            cables.get(i).setCorrugatedPipe(corrugatedPipe);
+            CorrugatedPipePlastic corrugatedPipePlastic = corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter());
+            cables.get(i).setCorrugatedPipePlastic(corrugatedPipePlastic);
+            CorrugatedPipeMetal corrugatedPipeMetal = corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter());
+            cables.get(i).setCorrugatedPipeMetal(corrugatedPipeMetal);
             cableService.saveOneCableToBase(cables.get(i));
         }
-        System.out.println("Кабели из файла добавлены в базу.");
+
+        System.out.println("Кабели из файла добавлены в базу");
+
+        return "redirect:/database/cable/show-all-cables-from-base";
     }
 
     //контроллер для поиска и назначения аксессуаров для кабеля
@@ -141,8 +153,11 @@ public class CableController {
         cable.setCableGlandMg(cableGlandMG);
         CableGlandRgg cableGlandRgg = cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cable.getOuterDiameter());
         cable.setCableGlandRgg(cableGlandRgg);
-        CorrugatedPipe corrugatedPipe = corrugatedPipeRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
-        cable.setCorrugatedPipe(corrugatedPipe);
+        CorrugatedPipePlastic corrugatedPipePlastic = corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
+        cable.setCorrugatedPipePlastic(corrugatedPipePlastic);
+//        TODO подбор металлической гофры
+        CorrugatedPipeMetal corrugatedPipeMetal = corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
+        cable.setCorrugatedPipeMetal(corrugatedPipeMetal);
         cableService.saveOneCableToBase(cable);
     }
 
@@ -163,7 +178,7 @@ public class CableController {
     public String deleteSelectedCables(@RequestParam(value = "isSelected", required = false) long[] isSelected) {
 
         for (int i = 0; i < isSelected.length; i++) {
-         cableRepository.deleteById(isSelected[i]);
+            cableRepository.deleteById(isSelected[i]);
         }
         return "redirect:/database/cable/show-all-cables-from-base";
     }

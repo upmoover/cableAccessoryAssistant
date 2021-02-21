@@ -35,13 +35,17 @@ public class Cable {
     @Transient
     private String cableGlandTypeStart;
     @Transient
-    private String corrugatedPipeStart;
+    private CorrugatedPipe corrugatedPipeStart;
     @Transient
     private String endLocation;
     @Transient
-    private String corrugatedPipeEnd;
+    private CorrugatedPipe corrugatedPipeEnd;
     @Transient
     private String cableGlandTypeEnd;
+    @Transient
+    private Float corrugatedPipeStartLength;
+    @Transient
+    private Float corrugatedPipeEndLength;
 
     //--------
 
@@ -61,11 +65,11 @@ public class Cable {
         this.cableGlandTypeStart = cableGlandTypeStart;
     }
 
-    public String getCorrugatedPipeStart() {
+    public CorrugatedPipe getCorrugatedPipeStart() {
         return corrugatedPipeStart;
     }
 
-    public void setCorrugatedPipeStart(String corrugatedPipeStart) {
+    public void setCorrugatedPipeStart(CorrugatedPipe corrugatedPipeStart) {
         this.corrugatedPipeStart = corrugatedPipeStart;
     }
 
@@ -77,11 +81,11 @@ public class Cable {
         this.endLocation = endLocation;
     }
 
-    public String getCorrugatedPipeEnd() {
+    public CorrugatedPipe getCorrugatedPipeEnd() {
         return corrugatedPipeEnd;
     }
 
-    public void setCorrugatedPipeEnd(String corrugatedPipeEnd) {
+    public void setCorrugatedPipeEnd(CorrugatedPipe corrugatedPipeEnd) {
         this.corrugatedPipeEnd = corrugatedPipeEnd;
     }
 
@@ -93,9 +97,23 @@ public class Cable {
         this.cableGlandTypeEnd = cableGlandTypeEnd;
     }
 
+    public Float getCorrugatedPipeStartLength() {
+        return corrugatedPipeStartLength;
+    }
+
+    public void setCorrugatedPipeStartLength(Float corrugatedPipeStartLength) {
+        this.corrugatedPipeStartLength = corrugatedPipeStartLength;
+    }
+
+    public Float getCorrugatedPipeEndLength() {
+        return corrugatedPipeEndLength;
+    }
+
+    public void setCorrugatedPipeEndLength(Float corrugatedPipeEndLength) {
+        this.corrugatedPipeEndLength = corrugatedPipeEndLength;
+    }
 
     //--------
-
 
     public boolean isSelectedForDelete() {
         return isSelectedForDelete;
@@ -119,8 +137,12 @@ public class Cable {
     private CableGlandRgg cableGlandRgg;
 
     @ManyToOne()
-    @JoinColumn(name = "corrugatedPipeId")
-    private CorrugatedPipe corrugatedPipe;
+    @JoinColumn(name = "corrugatedPipePlasticId")
+    private CorrugatedPipePlastic corrugatedPipePlastic;
+
+    @ManyToOne()
+    @JoinColumn(name = "corrugatedPipeMetalId")
+    private CorrugatedPipeMetal corrugatedPipeMetal;
 
     public CableGlandRgg getCableGlandRgg() {
         return cableGlandRgg;
@@ -146,12 +168,20 @@ public class Cable {
         this.cableGlandPg = cableGland;
     }
 
-    public CorrugatedPipe getCorrugatedPipe() {
-        return corrugatedPipe;
+    public CorrugatedPipePlastic getCorrugatedPipePlastic() {
+        return corrugatedPipePlastic;
     }
 
-    public void setCorrugatedPipe(CorrugatedPipe corrugatedPipe) {
-        this.corrugatedPipe = corrugatedPipe;
+    public void setCorrugatedPipePlastic(CorrugatedPipePlastic corrugatedPipePlastic) {
+        this.corrugatedPipePlastic = corrugatedPipePlastic;
+    }
+
+    public CorrugatedPipeMetal getCorrugatedPipeMetal() {
+        return corrugatedPipeMetal;
+    }
+
+    public void setCorrugatedPipeMetal(CorrugatedPipeMetal corrugatedPipeMetal) {
+        this.corrugatedPipeMetal = corrugatedPipeMetal;
     }
 
     public Cable() {

@@ -2,11 +2,12 @@ package org.upmoover.cableAccessoryAssistant.entities;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "СorrugatedPipe")
+//класс-родитель для трубы гофрированной
+@MappedSuperclass
 public class CorrugatedPipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @Column(name = "innerDiameter")
     private Float innerDiameter;
@@ -14,6 +15,9 @@ public class CorrugatedPipe {
     private String vendorCode;
     @Column(name = "name")
     private String name;
+
+    @Transient
+    private Float length;
 
     public CorrugatedPipe() {
     }
@@ -54,5 +58,13 @@ public class CorrugatedPipe {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Float getLength() {
+        return length;
+    }
+
+    public void setLength(Float length) {
+        this.length = length;
     }
 }

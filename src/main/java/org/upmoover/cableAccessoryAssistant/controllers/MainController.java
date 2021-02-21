@@ -90,6 +90,7 @@ public class MainController {
                     cables.get(i).setCableGlandRgg(cable.getCableGlandRgg());
                     cables.get(i).setCableGlandPg(cable.getCableGlandPg());
                     cables.get(i).setCableGlandMg(cable.getCableGlandMg());
+                    cables.get(i).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
                 }
             }
             //добавление в список кабелей, отсутствующих в базе данных
@@ -112,8 +113,8 @@ public class MainController {
 
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
-    public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
-        model.addAttribute("locationList", cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd));
+    public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd, @RequestParam(value = "corrugatedPipeStartLength", required = false) String[] corrugatedPipeStartLength, @RequestParam(value = "corrugatedPipeEndLength", required = false) String[] corrugatedPipeEndLength) {
+        model.addAttribute("locationList", cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
         return "show-results";
     }
 
@@ -122,7 +123,7 @@ public class MainController {
     public ModelAndView addNotFoundCable() {
         ModelAndView modelAndView = new ModelAndView();
         ArrayList<String> splitCable = new ArrayList<>();
-        if (Shared.notFoundCables.size() > 0) {
+        if (Shared.notFoundCables != null && Shared.notFoundCables.size() > 0) {
             boolean secondSection = false;
             label = true;//если пользователь попал на страницу добавления кабеля из этого контроллера, метка равна 1
             modelAndView.addObject("notFoundCable", Shared.notFoundCables.size());
@@ -141,20 +142,22 @@ public class MainController {
             Shared.uniqueNotFoundCables.remove(Shared.notFoundCables.get(0));
         }
 
-        if (Shared.notFoundCables.size() == 0 & label) {
+        if (Shared.notFoundCables != null && Shared.notFoundCables.size() == 0 & label) {
             splitCable.clear();
             modelAndView.addObject("notFoundCable", null);
             label = false;
             return showCableList(listCables);
         }
 
-        if (Shared.notFoundCables.size() == 0 & !label) {
+        if (Shared.notFoundCables != null && Shared.notFoundCables.size() == 0 & !label) {
             modelAndView.setViewName("one-cable-add-form");
             return modelAndView;
         }
 
-        if (Shared.notFoundCables.size() > 0)
+        if (Shared.notFoundCables != null && Shared.notFoundCables.size() > 0)
             modelAndView.setViewName("one-cable-add-form");
+
+        modelAndView.setViewName("one-cable-add-form");
         return modelAndView;
     }
 

@@ -2,7 +2,6 @@ package org.upmoover.cableAccessoryAssistant.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
 import org.upmoover.cableAccessoryAssistant.entities.CableGland;
 import org.upmoover.cableAccessoryAssistant.entities.Location;
@@ -72,7 +71,7 @@ public class CableService {
     }
 
     //метод для подсчета аксессуаров для разных местоположений
-    public HashMap<String, ArrayList<String>> countAccessories(ArrayList<Cable> cables, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd) {
+    public HashMap<String, ArrayList<String>> countAccessories(ArrayList<Cable> cables, String[] startLocation, String[] cableGlandTypeStart, String[] corrugatedPipeStart, String[] endLocation, String[] corrugatedPipeEnd, String[] cableGlandTypeEnd, String[] corrugatedPipeStartLength, String[] corrugatedPipeEndLength) {
 
         ArrayList<Location> locationsList = new ArrayList<>();
         HashMap<String, ArrayList<String>> locationList = new HashMap<>();
@@ -84,10 +83,77 @@ public class CableService {
         for (int i = 0; i < cables.size(); i++) {
             cables.get(i).setStartLocation(startLocation[i].split("=")[1]);
             cables.get(i).setCableGlandTypeStart(cableGlandTypeStart[i].split("=")[1]);
-            cables.get(i).setCorrugatedPipeStart(corrugatedPipeStart[i].split("=")[1]);
+
+            if (!corrugatedPipeStart[i].split("=")[1].equals("none")) {
+                if (corrugatedPipeStart[i].split("=")[1].equals("plastic")) {
+                    cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipePlastic());
+                }
+                if (corrugatedPipeStart[i].split("=")[1].equals("metal")) {
+                    cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipeMetal());
+                }
+
+                if (!corrugatedPipeStartLength[i].equals(""))
+                    cables.get(i).setCorrugatedPipeStartLength(Float.parseFloat(corrugatedPipeStartLength[i]));
+
+                for (int j = 0; j < locationsList.size(); j++) {
+                    if (locationsList.get(j).getName().equals(cables.get(i).getName())) {
+                        if (locationList.containsKey(cables.get(i).getCorrugatedPipeStart().getName())) {
+                            Float sum = locationsList.get(j).getCorrugatedPipeList().get(cables.get(i).getCorrugatedPipeStart().getName());
+                            locationsList.get(j).getCorrugatedPipeList().put(cables.get(i).getCorrugatedPipeStart().getName(), sum + cables.get(i).getCorrugatedPipeStart().getLength());
+                        }
+                    }
+                }
+            }
+
+//            cables.get(i).setCorrugatedPipeStart(corrugatedPipeStart[i].split("=")[1]);
+
             cables.get(i).setEndLocation(endLocation[i].split("=")[1]);
-            cables.get(i).setCorrugatedPipeEnd(corrugatedPipeEnd[i].split("=")[1]);
+
+            if (!corrugatedPipeEnd[i].split("=")[1].equals("none")) {
+                if (corrugatedPipeEnd[i].split("=")[1].equals("plastic")) {
+                    cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipePlastic());
+                }
+                if (corrugatedPipeEnd[i].split("=")[1].equals("metal")) {
+                    cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
+                }
+
+                if (!corrugatedPipeEndLength[i].equals(""))
+                    cables.get(i).setCorrugatedPipeEndLength(Float.parseFloat(corrugatedPipeStartLength[i]));
+
+                for (int j = 0; j < locationsList.size(); j++) {
+                    if (locationsList.get(j).getName().equals(cables.get(i).getName())) {
+                        if (locationList.containsKey(cables.get(i).getCorrugatedPipeEnd().getName())) {
+                            Float sum = locationsList.get(j).getCorrugatedPipeList().get(cables.get(i).getCorrugatedPipeEnd().getName());
+                            locationsList.get(j).getCorrugatedPipeList().put(cables.get(i).getCorrugatedPipeEnd().getName(), sum + cables.get(i).getCorrugatedPipeEnd().getLength());
+                        }
+                    }
+                }
+            }
+
             cables.get(i).setCableGlandTypeEnd(cableGlandTypeEnd[i].split("=")[1]);
+
+            Float startLength = null;
+            Float endLength = null;
+            if (!corrugatedPipeStartLength[i].isEmpty()) {
+                if ((startLength = Float.parseFloat(corrugatedPipeStartLength[i].replace(',', '.'))) > 0)
+                    cables.get(i).setCorrugatedPipeStartLength(startLength);
+            }
+
+            if (!corrugatedPipeEndLength[i].isEmpty()) {
+                if ((endLength = Float.parseFloat(corrugatedPipeEndLength[i].replace(',', '.'))) > 0)
+                    cables.get(i).setCorrugatedPipeEndLength(endLength);
+            }
+
+            //-----DELETE
+            System.out.println(cables.get(i).getCorrugatedPipeStart() + " - " + cables.get(i).getCorrugatedPipeStartLength() + " м.");
+            System.out.println(cables.get(i).getCorrugatedPipeEnd() + " - " + cables.get(i).getCorrugatedPipeEndLength() + " м.");
+            System.out.println(cables.get(i).getCorrugatedPipeStart());
+            System.out.println(cables.get(i).getCorrugatedPipeStartLength());
+            System.out.println(cables.get(i).getCorrugatedPipeEnd());
+            System.out.println(cables.get(i).getCorrugatedPipeEndLength());
+            System.out.println(cables.get(i).getCableGlandPg().getName());
+            System.out.println("----------");
+            //-----DELETE
 
             String[] startEndAccessories = {cables.get(i).getCableGlandTypeStart(), cables.get(i).getCableGlandTypeEnd()};
 
@@ -96,6 +162,13 @@ public class CableService {
                 switch (startEndAccessories[m]) {
                     case ("PG"):
                         for (int j = 0; j < locationsList.size(); j++) {
+
+//                            if (!locationsList.get(j).getCorrugatedPipeList().isEmpty() && locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && locationsList.get(j).getCorrugatedPipeList().containsKey(cables.get(i).getCorrugatedPipeStart().getName())) {
+//                                Float sum = locationsList.get(j).getCorrugatedPipeList().get(cables.get(i).getCorrugatedPipeStart().getName());
+//                                locationsList.get(j).getCorrugatedPipeList().put(cables.get(i).getCorrugatedPipeStart().getName(), sum + cables.get(i).getCorrugatedPipeStart().getLength());
+//                            }
+
+
                             if (m == 0) {
                                 if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
                                     locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
@@ -140,8 +213,6 @@ public class CableService {
 
         for (Location location : locationsList
         ) {
-            System.out.println(location.getName() + ":");
-
             HashSet<Object> uniqueCableGlands = new HashSet(location.getGlandsList());
             ArrayList<String> accessoryQuantity = new ArrayList<>();
             accessoryQuantity.clear();

@@ -34,13 +34,14 @@
                 <td>Начало кабеля</td>
                 <td>Сальник</td>
                 <td style="text-align: center">Гофра</td>
+                <td>Длина гофры</td>
                 <td></td>
                 <td>Конец кабеля</td>
                 <td style="text-align: center">Гофра</td>
+                <td>Длина гофры</td>
                 <td>Сальник</td>
             </tr>
             </thead>
-            <!--        <form th:method="POST" th:action="@{/start/get-attributes}">-->
             <tr class="data-row" th:each="cable : ${cables}">
                 <td th:text="${cable.designation}" th:value="${cable.designation}">
                 <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
@@ -66,6 +67,9 @@
                         <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
                     </select>
                 </td>
+                <td>
+                    <input type="text" name="corrugatedPipeStartLength">
+                </td>
                 <td>-------></td>
                 <td align="center">
                     <select name="endLocation">
@@ -80,6 +84,9 @@
                         <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'" th:text="Пластик"></option>
                         <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
                     </select>
+                </td>
+                <td>
+                    <input type="text" name="corrugatedPipeEndLength">
                 </td>
                 <td>
                     <select name="cableGlandTypeEnd">

@@ -12,8 +12,8 @@ public class CableGlandRgg extends CableGland {
     List<Cable> cables;
 
     @OneToOne()
-    @JoinColumn(name = "corrugatedPipeId")
-    CorrugatedPipe corrugatedPipe;
+    @JoinColumn(name = "id")
+    CorrugatedPipePlastic corrugatedPipePlastic;
 
     public List<Cable> getCables() {
         return cables;
@@ -30,11 +30,11 @@ public class CableGlandRgg extends CableGland {
         super(name, maxDiameter, vendorCode);
     }
 
-    public CorrugatedPipe getCorrugatedPipe() {
-        return corrugatedPipe;
+    public CorrugatedPipePlastic getcorrugatedPipePlastic() {
+        return corrugatedPipePlastic;
     }
 
-    public void setCorrugatedPipe(CorrugatedPipe corrugatedPipe) {
-        this.corrugatedPipe = corrugatedPipe;
+    public void setcorrugatedPipePlastic(CorrugatedPipePlastic corrugatedPipePlastic) {
+        this.corrugatedPipePlastic = corrugatedPipePlastic;
     }
 }
