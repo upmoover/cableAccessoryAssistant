@@ -91,6 +91,7 @@ public class MainController {
                     cables.get(i).setCableGlandPg(cable.getCableGlandPg());
                     cables.get(i).setCableGlandMg(cable.getCableGlandMg());
                     cables.get(i).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
+                    cables.get(i).setCorrugatedPipeMetal(cable.getCorrugatedPipeMetal());
                 }
             }
             //добавление в список кабелей, отсутствующих в базе данных

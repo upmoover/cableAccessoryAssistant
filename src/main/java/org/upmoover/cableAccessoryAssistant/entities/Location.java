@@ -19,14 +19,15 @@ public class Location {
     private ArrayList<Object> glandsList;
 
     @Transient
-    private HashMap<String, Float> corrugatedPipeList;
+    private HashMap<CorrugatedPipe, Float> corrugatedPipeList;
 
-    public HashMap<String, Float> getCorrugatedPipeList() {
+    public HashMap<CorrugatedPipe, Float> getCorrugatedPipeList() {
         return corrugatedPipeList;
     }
 
     public Location() {
         this.glandsList = new ArrayList<>();
+        this.corrugatedPipeList = new HashMap<>();
     }
 
     public void setGlandsList(ArrayList<Object> glandsList) {
