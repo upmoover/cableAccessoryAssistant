@@ -3,6 +3,7 @@ package org.upmoover.cableAccessoryAssistant.entities;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "Locations")
@@ -19,9 +20,9 @@ public class Location {
     private ArrayList<Object> glandsList;
 
     @Transient
-    private HashMap<CorrugatedPipe, Float> corrugatedPipeList;
+    private Map<CorrugatedPipe, Float> corrugatedPipeList;
 
-    public HashMap<CorrugatedPipe, Float> getCorrugatedPipeList() {
+    public Map<CorrugatedPipe, Float> getCorrugatedPipeList() {
         return corrugatedPipeList;
     }
 
