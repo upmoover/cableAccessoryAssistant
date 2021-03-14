@@ -15,14 +15,18 @@ import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
 
     String pathFile = null;
+    //list of cables, read from file
     ArrayList<Cable> listCables = new ArrayList<>();
-
+    //list of cables added from the base and read from the file
     ArrayList<Cable> cables = new ArrayList<>();
+    //list of cables, found in base
+    ArrayList<Cable> cablesFoundIdBase = new ArrayList<>();
 
     CableService cableService;
 
@@ -80,8 +84,8 @@ public class MainController {
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         Cable cable;
         ModelAndView modelAndView = new ModelAndView();
-
-        //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД
+        cables.clear();
+        //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД или пропустить этот шаг
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
                 cables.add(listCables.get(i));
@@ -92,14 +96,17 @@ public class MainController {
                     cables.get(i).setCableGlandMg(cable.getCableGlandMg());
                     cables.get(i).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
                     cables.get(i).setCorrugatedPipeMetal(cable.getCorrugatedPipeMetal());
+                    //add cables, that was found in a base to a separate list
+                    cablesFoundIdBase.add(cables.get(i));
                 }
             }
-            //добавление в список кабелей, отсутствующих в базе данных
+            //add cables, that was not found in a base
             else {
                 Shared.uniqueNotFoundCables.add(listCables.get(i));
             }
         }
 
+        //if there are no cables added to the list - clear the cable list to add missing cables to the base
         if (!Shared.uniqueNotFoundCables.isEmpty()) cables.clear();
 
         Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
@@ -159,6 +166,16 @@ public class MainController {
             modelAndView.setViewName("one-cable-add-form");
 
         modelAndView.setViewName("one-cable-add-form");
+        return modelAndView;
+    }
+
+    @GetMapping("/start/skip-notFoundCable")
+    public ModelAndView skipNotFoundCable() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("cables", cablesFoundIdBase);
+        ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
+        modelAndView.addObject("locations", locations);
+        modelAndView.setViewName("show-cables-for-selection-accessories");
         return modelAndView;
     }
 
