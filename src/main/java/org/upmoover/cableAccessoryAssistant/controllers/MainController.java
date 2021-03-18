@@ -15,7 +15,6 @@ import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -26,7 +25,11 @@ public class MainController {
     //list of cables added from the base and read from the file
     ArrayList<Cable> cables = new ArrayList<>();
     //list of cables, found in base
-    ArrayList<Cable> cablesFoundIdBase = new ArrayList<>();
+    ArrayList<Cable> cablesFoundInBase = new ArrayList<>();
+
+    ArrayList<String> cablesWithLength = new ArrayList<>();
+
+    boolean isSkipCablesSelected;
 
     CableService cableService;
 
@@ -84,7 +87,10 @@ public class MainController {
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         Cable cable;
         ModelAndView modelAndView = new ModelAndView();
-        cables.clear();
+//        cables.clear();
+        cablesWithLength.clear();
+        cablesFoundInBase.clear();
+        Shared.uniqueNotFoundCables.clear();
         //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД или пропустить этот шаг
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
@@ -97,7 +103,7 @@ public class MainController {
                     cables.get(i).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
                     cables.get(i).setCorrugatedPipeMetal(cable.getCorrugatedPipeMetal());
                     //add cables, that was found in a base to a separate list
-                    cablesFoundIdBase.add(cables.get(i));
+                    cablesFoundInBase.add(cables.get(i));
                 }
             }
             //add cables, that was not found in a base
@@ -122,7 +128,12 @@ public class MainController {
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
     public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd, @RequestParam(value = "corrugatedPipeStartLength", required = false) String[] corrugatedPipeStartLength, @RequestParam(value = "corrugatedPipeEndLength", required = false) String[] corrugatedPipeEndLength) {
+        if (!isSkipCablesSelected)
         model.addAttribute("locationList", cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
+        if (isSkipCablesSelected)
+        model.addAttribute("locationList", cableService.countAccessories(cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
+        model.addAttribute("cablesWithLength", sumCables(cablesFoundInBase));
+        isSkipCablesSelected = false;
         return "show-results";
     }
 
@@ -171,12 +182,48 @@ public class MainController {
 
     @GetMapping("/start/skip-notFoundCable")
     public ModelAndView skipNotFoundCable() {
+        isSkipCablesSelected = true;
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("cables", cablesFoundIdBase);
+        modelAndView.addObject("cables", cablesFoundInBase);
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
         modelAndView.addObject("locations", locations);
         modelAndView.setViewName("show-cables-for-selection-accessories");
         return modelAndView;
+    }
+
+    public ArrayList<String> sumCables(ArrayList<Cable> cablesList) {
+
+        List<Cable> cablesListCopy = new ArrayList<>();
+
+        for (int i = 0; i < cablesList.size(); i++) {
+            cablesListCopy.add(new Cable(cablesList.get(i).getDesignation(), cablesList.get(i).getName(), cablesList.get(i).getLength()));
+        }
+
+        //add list of cables in Set to remove duplicates
+        HashSet<Cable> uniqueCables = new HashSet<>(cablesListCopy);
+
+        for (Cable cable : uniqueCables
+        ) {
+            cable.setLength(0F);
+        }
+
+        Float sum;
+        for (Cable cable : uniqueCables
+        ) {
+            for (int i = 0; i < cablesList.size(); i++) {
+                if (cablesList.get(i).equals(cable)) {
+                    sum = cable.getLength() + cablesList.get(i).getLength();
+                    cable.setLength(sum);
+                }
+            }
+        }
+
+        for (Cable cable : uniqueCables
+        ) {
+            cablesWithLength.add("Кабель " + cable.getName() + " - " + cable.getLength() + " м.");
+        }
+
+        return cablesWithLength;
     }
 
     @GetMapping("/start/add-notFoundCable-show-cableList")

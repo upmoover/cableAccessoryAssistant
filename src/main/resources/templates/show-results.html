@@ -23,6 +23,17 @@
         <td th:if="${locationList.get(location)}" th:text="${location} + ' ' + ${locationList.get(location)}">
 
     </tr>
+
+    </tbody>
+</table>
+
+<table>
+    <tbody>
+    <tr th:each="cable : ${cablesWithLength}">
+
+        <td th:text="${cable}">
+
+    </tr>
     </tbody>
 </table>
 </form>

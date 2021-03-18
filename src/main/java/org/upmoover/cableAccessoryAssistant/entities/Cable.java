@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cables")
 //класс для кабельной продукции
-public class Cable {
+public class Cable implements Cloneable {
     //id кабеля
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -280,4 +280,10 @@ public class Cable {
         if (this == null || obj == null) return false;
         return this.hashCode() == obj.hashCode();
     }
+
+   /* @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Cable cloned = new Cable(this.getDesignation(), this.getName(), this.getLength());
+        return cloned;
+    }*/
 }
