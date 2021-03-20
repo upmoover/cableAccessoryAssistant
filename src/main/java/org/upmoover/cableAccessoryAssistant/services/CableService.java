@@ -16,6 +16,12 @@ public class CableService {
 
     CableRepository cableRepository;
 
+    private ArrayList<Cable> cablesWithDesignatedAccessories = new ArrayList<>();
+
+    public ArrayList<Cable> getCablesWithDesignatedAccessories() {
+        return cablesWithDesignatedAccessories;
+    }
+
     //внедрение зависимости для репозитория
     @Autowired
     public void setCableRepository(CableRepository cableRepository) {
@@ -78,6 +84,9 @@ public class CableService {
             locationsList.add(location);
         }
 
+        for (int i = 0; i < cables.size(); i++) {
+            cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getDesignation(), cables.get(i).getName(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getEndLocation()));
+        }
         setStartEndCableGLandType(cables, cableGlandTypeStart, cableGlandTypeEnd);
         setStartEndLocation(cables, startLocation, endLocation);
         setCorrugatedPipeStart(cables, corrugatedPipeStart, corrugatedPipeStartLength, locationsList, locationList);
@@ -85,6 +94,7 @@ public class CableService {
         setCorrugatedPipeStartEndLength(cables, corrugatedPipeStartLength, corrugatedPipeEndLength, locationsList, locationList);
         selectionStartEndAccessories(cables, locationsList);
         sumCorrugatedPipe(cables, locationsList);
+
 
 
         for (Location location : locationsList
@@ -211,12 +221,16 @@ public class CableService {
                             for (int j = 0; j < locationsList.size(); j++) {
 
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandPg());
+                                    }
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()))
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandPg());
+                                    }
                                 }
                             }
 
@@ -225,12 +239,16 @@ public class CableService {
                         case ("MG"):
                             for (int j = 0; j < locationsList.size(); j++) {
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()))
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandMg());
+                                    }
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()))
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandMg());
+                                    }
                                 }
                             }
                             break;
@@ -241,12 +259,14 @@ public class CableService {
                                     if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
                                         cables.get(i).setCorrugatedPipeStart(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandRgg());
                                     }
                                 }
                                 if (m == 1) {
                                     if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
                                         cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandRgg());
                                     }
                                 }
                             }
@@ -258,12 +278,14 @@ public class CableService {
                                     if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                         cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipeMetal());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                     }
                                 }
                                 if (m == 1) {
                                     if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                         cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                     }
                                 }
                             }

@@ -46,6 +46,10 @@ public class Cable implements Cloneable {
     private Float corrugatedPipeStartLength;
     @Transient
     private Float corrugatedPipeEndLength;
+    @Transient
+    private CableGland selectedCableGlandStart;
+    @Transient
+    private CableGland selectedCableGlandEnd;
 
     //--------
 
@@ -111,6 +115,22 @@ public class Cable implements Cloneable {
 
     public void setCorrugatedPipeEndLength(Float corrugatedPipeEndLength) {
         this.corrugatedPipeEndLength = corrugatedPipeEndLength;
+    }
+
+    public CableGland getSelectedCableGlandStart() {
+        return selectedCableGlandStart;
+    }
+
+    public void setSelectedCableGlandStart(CableGland selectedCableGlandStart) {
+        this.selectedCableGlandStart = selectedCableGlandStart;
+    }
+
+    public CableGland getSelectedCableGlandEnd() {
+        return selectedCableGlandEnd;
+    }
+
+    public void setSelectedCableGlandEnd(CableGland selectedCableGlandEnd) {
+        this.selectedCableGlandEnd = selectedCableGlandEnd;
     }
 
     //--------
@@ -197,6 +217,14 @@ public class Cable implements Cloneable {
         this.designation = designation;
         this.name = name;
         this.length = length;
+    }
+
+    public Cable(String designation, String name, Float length, String startLocation, String endLocation) {
+        this.name = name;
+        this.designation = designation;
+        this.length = length;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
     }
 
     public Long getId() {

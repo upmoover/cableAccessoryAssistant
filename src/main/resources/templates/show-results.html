@@ -36,6 +36,17 @@
     </tr>
     </tbody>
 </table>
+
+<table>
+    <tbody>
+    <tr th:each="cable : ${cablesWithDesignatedAccessories}">
+
+        <td th:text="${cable.getDesignation()} + ${cable.getSelectedCableGlandStart().getName()} + ${cable.getSelectedCableGlandEnd().getName()}">
+
+    </tr>
+    </tbody>
+</table>
+
 </form>
 </body>
 </html>

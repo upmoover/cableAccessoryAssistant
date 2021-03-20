@@ -91,6 +91,7 @@ public class MainController {
         cablesWithLength.clear();
         cablesFoundInBase.clear();
         Shared.uniqueNotFoundCables.clear();
+        cableService.getCablesWithDesignatedAccessories().clear();
         //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД или пропустить этот шаг
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
@@ -134,6 +135,7 @@ public class MainController {
         model.addAttribute("locationList", cableService.countAccessories(cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
         model.addAttribute("cablesWithLength", sumCables(cablesFoundInBase));
         isSkipCablesSelected = false;
+        model.addAttribute("cablesWithDesignatedAccessories", cableService.getCablesWithDesignatedAccessories());
         return "show-results";
     }
 
