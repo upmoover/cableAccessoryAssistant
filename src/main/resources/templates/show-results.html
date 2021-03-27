@@ -16,6 +16,7 @@
     <a href="/" class="btn-blue">На главную</a>
 </div>
 
+<h4 align="center">Группировка аксессуаров по местоположению</h4>
 <table>
     <tbody>
     <tr th:each="location : ${locationList.keySet()}">
@@ -26,7 +27,9 @@
 
     </tbody>
 </table>
+<br>
 
+<h4 align="center">Суммированные кабели</h4>
 <table>
     <tbody>
     <tr th:each="cable : ${cablesWithLength}">
@@ -36,16 +39,26 @@
     </tr>
     </tbody>
 </table>
+<br>
 
+<h4 align="center">Полный список кабелей с подобранными аксессуарами</h4>
 <table>
     <tbody>
     <tr th:each="cable : ${cablesWithDesignatedAccessories}">
 
-        <td th:text="${cable.getDesignation()} + ${cable.getSelectedCableGlandStart().getName()} + ${cable.getSelectedCableGlandEnd().getName()}">
+            <td th:if="${cable.getCorrugatedPipeStartLength() != null and cable.getCorrugatedPipeStart() != null and cable.getCorrugatedPipeEndLength() == null}" th:text="${cable.getDesignation()} + ' ' + '(' + ${cable.getName()} + ')' + ' [' + ${cable.getStartLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandStart().getName()} + '(' + ${cable.getCorrugatedPipeStart().getName()} + ' = ' + ${cable.getCorrugatedPipeStartLength()} + ' м.' + ')' + '  --->  ' +'[' +  ${cable.getEndLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandEnd().getName()}">
+        <td th:if="${cable.getCorrugatedPipeEndLength() != null and cable.getCorrugatedPipeEnd() != null and cable.getCorrugatedPipeStartLength() == null}" th:text="${cable.getDesignation()} + ' ' + '(' + ${cable.getName()} + ')' + ' [' + ${cable.getStartLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandStart().getName()} + '  --->  ' +'[' +  ${cable.getEndLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandEnd().getName()}+ '(' + ${cable.getCorrugatedPipeEnd().getName()} + ' = ' + ${cable.getCorrugatedPipeEndLength()} + ' м.' + ')'">
+        <td th:if="${cable.getCorrugatedPipeStartLength() != null and cable.getCorrugatedPipeStart() != null and cable.getCorrugatedPipeEndLength() != null and cable.getCorrugatedPipeEnd() != null}" th:text="${cable.getDesignation()} + ' ' + '(' + ${cable.getName()} + ')' + ' [' + ${cable.getStartLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandStart().getName()} + '(' + ${cable.getCorrugatedPipeStart().getName()} + ' = ' + ${cable.getCorrugatedPipeStartLength()} + ' м.' + ')' + '  --->  ' +'[' +  ${cable.getEndLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandEnd().getName()}+ '(' + ${cable.getCorrugatedPipeEnd().getName()} + ' = ' + ${cable.getCorrugatedPipeEndLength()} + ' м.' + ')'">
+        <td th:if="${cable.getCorrugatedPipeStartLength() == null and cable.getCorrugatedPipeEndLength() == null}" th:text="${cable.getDesignation()} + ' ' + '(' + ${cable.getName()} + ')' + ' [' + ${cable.getStartLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandStart().getName()} + '  --->  ' +'[' +  ${cable.getEndLocation()} + '] ' + '= ' + ${cable.getSelectedCableGlandEnd().getName()}">
 
     </tr>
     </tbody>
 </table>
+<br>
+
+<div class="return-home">
+    <a href="/start/path-to-Excel" class="btn-green">Выгрузить в Excel</a>
+</div>
 
 </form>
 </body>

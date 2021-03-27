@@ -12,12 +12,16 @@ import org.upmoover.cableAccessoryAssistant.repositories.CableGlandPgRepository;
 import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
+import org.upmoover.cableAccessoryAssistant.utils.ExcelUtil;
 import org.upmoover.cableAccessoryAssistant.utils.Shared;
 
+import java.io.IOException;
 import java.util.*;
 
 @Controller
 public class MainController {
+
+    HashMap<String, ArrayList<String>> locationList = null;
 
     String pathFile = null;
     //list of cables, read from file
@@ -96,16 +100,18 @@ public class MainController {
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
                 cables.add(listCables.get(i));
-                if (Shared.uniqueNotFoundCables.isEmpty()) {
-                    cables.get(i).setId(cable.getId());
-                    cables.get(i).setCableGlandRgg(cable.getCableGlandRgg());
-                    cables.get(i).setCableGlandPg(cable.getCableGlandPg());
-                    cables.get(i).setCableGlandMg(cable.getCableGlandMg());
-                    cables.get(i).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
-                    cables.get(i).setCorrugatedPipeMetal(cable.getCorrugatedPipeMetal());
-                    //add cables, that was found in a base to a separate list
-                    cablesFoundInBase.add(cables.get(i));
-                }
+//                if (Shared.uniqueNotFoundCables.isEmpty()) {
+                cables.get(cables.size() - 1).setId(cable.getId());
+                cables.get(cables.size() - 1).setCableGlandRgg(cable.getCableGlandRgg());
+                cables.get(cables.size() - 1).setCableGlandPg(cable.getCableGlandPg());
+                cables.get(cables.size() - 1).setCableGlandMg(cable.getCableGlandMg());
+                cables.get(cables.size() - 1).setCorrugatedPipePlastic(cable.getCorrugatedPipePlastic());
+                cables.get(cables.size() - 1).setCorrugatedPipeMetal(cable.getCorrugatedPipeMetal());
+                cables.get(cables.size() - 1).setCorrugatedPipeStartLength(cable.getCorrugatedPipeStartLength());
+                cables.get(cables.size() - 1).setCorrugatedPipeEndLength(cable.getCorrugatedPipeEndLength());
+                //add cables, that was found in a base to a separate list
+                cablesFoundInBase.add(cables.get(cables.size() - 1));
+//                }
             }
             //add cables, that was not found in a base
             else {
@@ -129,10 +135,14 @@ public class MainController {
     @PostMapping("/start/get-attributes")
     @ResponseStatus(value = HttpStatus.OK)
     public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd, @RequestParam(value = "corrugatedPipeStartLength", required = false) String[] corrugatedPipeStartLength, @RequestParam(value = "corrugatedPipeEndLength", required = false) String[] corrugatedPipeEndLength) {
-        if (!isSkipCablesSelected)
-        model.addAttribute("locationList", cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
-        if (isSkipCablesSelected)
-        model.addAttribute("locationList", cableService.countAccessories(cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength));
+        if (!isSkipCablesSelected) {
+            locationList = cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength);
+            model.addAttribute("locationList", locationList);
+        }
+        if (isSkipCablesSelected) {
+            locationList = cableService.countAccessories(cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength);
+            model.addAttribute("locationList", locationList);
+        }
         model.addAttribute("cablesWithLength", sumCables(cablesFoundInBase));
         isSkipCablesSelected = false;
         model.addAttribute("cablesWithDesignatedAccessories", cableService.getCablesWithDesignatedAccessories());
@@ -222,7 +232,7 @@ public class MainController {
 
         for (Cable cable : uniqueCables
         ) {
-            cablesWithLength.add("Кабель " + cable.getName() + " - " + cable.getLength() + " м.");
+            cablesWithLength.add("Кабель " + cable.getName() + " = " + cable.getLength() + " м.");
         }
 
         return cablesWithLength;
@@ -232,5 +242,16 @@ public class MainController {
     public ModelAndView saveToBaseShowCables() {
 //TODO разобраться
         return showCableList(listCables);
+    }
+
+    @GetMapping("/start/path-to-Excel")
+    public String pathToExcel() {
+        return "export-to-excel";
+    }
+
+    @RequestMapping("/excel/file-path")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void exportToExcel(@RequestParam String pathFile) throws IOException {
+        ExcelUtil.writeExcelFile(pathFile, locationList, cablesWithLength, cableService.getCablesWithDesignatedAccessories());
     }
 }

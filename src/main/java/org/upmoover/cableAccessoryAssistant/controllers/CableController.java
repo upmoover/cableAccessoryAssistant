@@ -120,7 +120,6 @@ public class CableController {
 
     //сохранить кабели в базу данных список кабелей из txt файла
     @RequestMapping("/file-path")
-//    @ResponseStatus(value = HttpStatus.OK)
     public String addCableFromFile(@RequestParam String pathFile) {
         //получение списка кабелей из файла для добавления в базу данных
         ArrayList<Cable> cables = CableFileReader.readFile(pathFile);

@@ -71,7 +71,6 @@ public class CableService {
         ) {
             cableRepository.save(cable);
         }
-
     }
 
     //метод для подсчета аксессуаров для разных местоположений
@@ -84,17 +83,16 @@ public class CableService {
             locationsList.add(location);
         }
 
-        for (int i = 0; i < cables.size(); i++) {
-            cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getDesignation(), cables.get(i).getName(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getEndLocation()));
-        }
         setStartEndCableGLandType(cables, cableGlandTypeStart, cableGlandTypeEnd);
         setStartEndLocation(cables, startLocation, endLocation);
         setCorrugatedPipeStart(cables, corrugatedPipeStart, corrugatedPipeStartLength, locationsList, locationList);
         setCorrugatedPipeEnd(cables, corrugatedPipeEnd, corrugatedPipeEndLength);
         setCorrugatedPipeStartEndLength(cables, corrugatedPipeStartLength, corrugatedPipeEndLength, locationsList, locationList);
+        for (int i = 0; i < cables.size(); i++) {
+            cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getDesignation(), cables.get(i).getName(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getEndLocation(), cables.get(i).getCorrugatedPipeStartLength(), cables.get(i).getCorrugatedPipeEndLength(), cables.get(i).getCorrugatedPipeStart(), cables.get(i).getCorrugatedPipeEnd()));
+        }
         selectionStartEndAccessories(cables, locationsList);
         sumCorrugatedPipe(cables, locationsList);
-
 
 
         for (Location location : locationsList
@@ -111,7 +109,7 @@ public class CableService {
 
             for (CorrugatedPipe cp : location.getCorrugatedPipeList().keySet()
             ) {
-                accessoryQuantity.add(cp.getName() + " - " + location.getCorrugatedPipeList().get(cp) + " м.");
+                accessoryQuantity.add(cp.getName() + " = " + location.getCorrugatedPipeList().get(cp) + " м.");
             }
 
             if (location.getGlandsList().size() != 0)
@@ -285,7 +283,7 @@ public class CableService {
                                     if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                         cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
-                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                     }
                                 }
                             }

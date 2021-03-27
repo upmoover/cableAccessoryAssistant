@@ -227,6 +227,18 @@ public class Cable implements Cloneable {
         this.endLocation = endLocation;
     }
 
+    public Cable(String designation, String name, Float length, String startLocation, String endLocation, Float corrugatedPipeStartLength, Float corrugatedPipeEndLength, CorrugatedPipe corrugatedPipeStart, CorrugatedPipe corrugatedPipeEnd) {
+        this.name = name;
+        this.designation = designation;
+        this.length = length;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+        this.corrugatedPipeStartLength = corrugatedPipeStartLength;
+        this.corrugatedPipeEndLength = corrugatedPipeEndLength;
+        this.corrugatedPipeStart = corrugatedPipeStart;
+        this.corrugatedPipeEnd = corrugatedPipeEnd;
+    }
+
     public Long getId() {
         return id;
     }
