@@ -26,6 +26,13 @@
 
 <div th:if="${#lists.isEmpty(notFoundCables)}">
     <form th:method="POST" th:action="@{/start/get-attributes}">
+        <input class="form-control mt-2" type="text" name="correction"
+               placeholder="Укажите поправку для аксессуара, %">
+        <input class="form-control mt-2" type="text" name="min"
+               placeholder="Укажите нижнюю границу для подбора, мм">
+        <input class="form-control mt-2" type="text" name="max"
+               placeholder="Укажите верхнюю границу для подбора, мм">
+
         <table align="center">
             <thead class="thead-dark">
             <tr>

@@ -3,8 +3,9 @@ package org.upmoover.cableAccessoryAssistant.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.upmoover.cableAccessoryAssistant.entities.*;
-import org.upmoover.cableAccessoryAssistant.repositories.CableRepository;
-import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
+import org.upmoover.cableAccessoryAssistant.repositories.*;
+import org.upmoover.cableAccessoryAssistant.utils.Corrections;
+import org.upmoover.cableAccessoryAssistant.utils.SelectedAccessory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,9 @@ import java.util.HashSet;
 
 @Service
 public class CableService {
+    StoredValues correction;
+    StoredValues min;
+    StoredValues max;
 
     CableRepository cableRepository;
 
@@ -34,6 +38,48 @@ public class CableService {
     @Autowired
     public void setLocationsRepository(LocationsRepository locationsRepository) {
         this.locationsRepository = locationsRepository;
+    }
+
+    StoredValuesRepository storedValuesRepository;
+
+    @Autowired
+    public void setStoredValuesRepository(StoredValuesRepository storedValuesRepository) {
+        this.storedValuesRepository = storedValuesRepository;
+    }
+
+    CableGlandRggRepository cableGlandRggRepository;
+
+    @Autowired
+    public void setCableGlandRggRepository(CableGlandRggRepository cableGlandRggRepository) {
+        this.cableGlandRggRepository = cableGlandRggRepository;
+    }
+
+    CorrugatedPipeMetalRepository corrugatedPipeMetalRepository;
+
+    @Autowired
+    public void setCorrugatedPipeMetalRepository(CorrugatedPipeMetalRepository corrugatedPipeMetalRepository) {
+        this.corrugatedPipeMetalRepository = corrugatedPipeMetalRepository;
+    }
+
+    CableGlandPgRepository cableGlandPgRepository;
+
+    @Autowired
+    public void setCableGlandPgRepository(CableGlandPgRepository cableGlandPgRepository) {
+        this.cableGlandPgRepository = cableGlandPgRepository;
+    }
+
+    CableGlandMgRepository cableGlandMgRepository;
+
+    @Autowired
+    public void setCableGlandMgRepository(CableGlandMgRepository cableGlandMgRepository) {
+        this.cableGlandMgRepository = cableGlandMgRepository;
+    }
+
+    CorrugatedPipePlasticRepository corrugatedPipePlasticRepository;
+
+    @Autowired
+    public void setCorrugatedPipePlasticRepository(CorrugatedPipePlasticRepository corrugatedPipePlasticRepository) {
+        this.corrugatedPipePlasticRepository = corrugatedPipePlasticRepository;
     }
 
     //метод для поиска всех элеметов базы (аналог SELECT * FROM cable)
@@ -74,7 +120,50 @@ public class CableService {
     }
 
     //метод для подсчета аксессуаров для разных местоположений
-    public HashMap<String, ArrayList<String>> countAccessories(ArrayList<Cable> cables, String[] startLocation, String[] cableGlandTypeStart, String[] corrugatedPipeStart, String[] endLocation, String[] corrugatedPipeEnd, String[] cableGlandTypeEnd, String[] corrugatedPipeStartLength, String[] corrugatedPipeEndLength) {
+    public HashMap<String, ArrayList<String>> countAccessories(ArrayList<Cable> cables, String[] startLocation, String[] cableGlandTypeStart, String[] corrugatedPipeStart, String[] endLocation, String[] corrugatedPipeEnd, String[] cableGlandTypeEnd, String[] corrugatedPipeStartLength, String[] corrugatedPipeEndLength, String inputCorrection, String inputMin, String inputMax) {
+
+        if (storedValuesRepository.findByName("correction") == null) {
+            correction = new StoredValues("correction", 0F);
+            storedValuesRepository.save(correction);
+        } else correction = storedValuesRepository.findByName("correction");
+
+        if (storedValuesRepository.findByName("min") == null) {
+            min = new StoredValues("min", 0F);
+            storedValuesRepository.save(min);
+        } else min = storedValuesRepository.findByName("min");
+
+        if (storedValuesRepository.findByName("max") == null) {
+            max = new StoredValues("max", 0F);
+            storedValuesRepository.save(max);
+        } else max = storedValuesRepository.findByName("max");
+
+
+        if (!inputCorrection.equals("")) {
+            correction = storedValuesRepository.findByName("correction");
+            correction.setValue(Float.valueOf(inputCorrection.toString().replace(",", ".")));
+        }
+
+        if (!inputMin.equals("")) {
+            min = storedValuesRepository.findByName("min");
+            min.setValue(Float.valueOf(inputMin.toString().replace(",", ".")));
+        }
+
+        if (!inputMax.equals("")) {
+            max = storedValuesRepository.findByName("max");
+            max.setValue(Float.valueOf(inputMax.toString().replace(",", ".")));
+        }
+
+        if (!inputCorrection.equals(storedValuesRepository.findByName("correction").getValue())) {
+            storedValuesRepository.save(correction);
+        }
+
+        if (!inputCorrection.equals(storedValuesRepository.findByName("min").getValue())) {
+            storedValuesRepository.save(min);
+        }
+
+        if (!inputCorrection.equals(storedValuesRepository.findByName("max").getValue())) {
+            storedValuesRepository.save(max);
+        }
 
         ArrayList<Location> locationsList = new ArrayList<>();
         HashMap<String, ArrayList<String>> locationList = new HashMap<>();
@@ -119,6 +208,7 @@ public class CableService {
         return locationList;
     }
 
+
     //method for assign type of cable gland (for start and end locations), filled from form
     public void setStartEndCableGLandType(ArrayList<Cable> cables, String[] cableGlandTypeStart, String[] cableGlandTypeEnd) {
         for (int i = 0; i < cables.size(); i++) {
@@ -139,11 +229,23 @@ public class CableService {
     public void setCorrugatedPipeStart(ArrayList<Cable> cables, String[] corrugatedPipeStart, String[] corrugatedPipeStartLength, ArrayList<Location> locationsList, HashMap<String, ArrayList<String>> locationList) {
         for (int i = 0; i < cables.size(); i++) {
             if (!corrugatedPipeStart[i].split("=")[1].equals("none")) {
-                if (corrugatedPipeStart[i].split("=")[1].equals("plastic")) {
+                if (corrugatedPipeStart[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() == 0) {
                     cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipePlastic());
                 }
-                if (corrugatedPipeStart[i].split("=")[1].equals("metal")) {
+                if (corrugatedPipeStart[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() == 0) {
+                    cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipePlastic());
+                }
+
+                if (corrugatedPipeStart[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() != 0) {
+                    cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                    cables.get(i).setCorrugatedPipeStart(cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter()).getcorrugatedPipePlastic());
+                }
+                if (corrugatedPipeStart[i].split("=")[1].equals("metal") && storedValuesRepository.findByName("correction").getValue() == 0) {
                     cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipeMetal());
+                }
+                if (corrugatedPipeStart[i].split("=")[1].equals("metal") && storedValuesRepository.findByName("correction").getValue() != 0) {
+                    cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                    cables.get(i).setCorrugatedPipeStart(corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
                 }
 
                 if (!corrugatedPipeStartLength[i].equals(""))
@@ -165,11 +267,23 @@ public class CableService {
     public void setCorrugatedPipeEnd(ArrayList<Cable> cables, String[] corrugatedPipeEnd, String[] corrugatedPipeEndLength) {
         for (int i = 0; i < cables.size(); i++) {
             if (!corrugatedPipeEnd[i].split("=")[1].equals("none")) {
-                if (corrugatedPipeEnd[i].split("=")[1].equals("plastic")) {
+                if (corrugatedPipeEnd[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() == 0) {
                     cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipePlastic());
                 }
-                if (corrugatedPipeEnd[i].split("=")[1].equals("metal")) {
+                if (corrugatedPipeEnd[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() == 0) {
+                    cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipePlastic());
+                }
+
+                if (corrugatedPipeEnd[i].split("=")[1].equals("plastic") && storedValuesRepository.findByName("correction").getValue() != 0) {
+                    cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                    cables.get(i).setCorrugatedPipeEnd(cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter()).getcorrugatedPipePlastic());
+                }
+                if (corrugatedPipeEnd[i].split("=")[1].equals("metal") && storedValuesRepository.findByName("correction").getValue() == 0) {
                     cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
+                }
+                if (corrugatedPipeEnd[i].split("=")[1].equals("metal") && storedValuesRepository.findByName("correction").getValue() != 0) {
+                    cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                    cables.get(i).setCorrugatedPipeEnd(corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
                 }
 
                 if (!corrugatedPipeEndLength[i].equals(""))
@@ -217,15 +331,32 @@ public class CableService {
                     switch (startEndAccessories[m]) {
                         case ("PG"):
                             for (int j = 0; j < locationsList.size(); j++) {
-
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandPg());
                                     }
+
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandPg(cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter()));
+                                        }
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandPg());
+                                    }
+
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandPg());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandPg(cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter()));
+                                        }
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandPg());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandPg());
                                     }
@@ -237,15 +368,31 @@ public class CableService {
                         case ("MG"):
                             for (int j = 0; j < locationsList.size(); j++) {
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandMg());
                                     }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandMg(cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter()));
+                                        }
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandPg());
+                                    }
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandMg());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandMg(cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(cables.get(i).getOuterDiameter(), cables.get(i).getOuterDiameter()));
+                                        }
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandMg());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandPg());
                                     }
                                 }
                             }
@@ -254,14 +401,34 @@ public class CableService {
                         case ("RGG"):
                             for (int j = 0; j < locationsList.size(); j++) {
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
+                                        cables.get(i).setCorrugatedPipeStart(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandRgg());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandRgg(cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                            cables.get(i).setCorrugatedPipePlastic(corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                        }
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
                                         cables.get(i).setCorrugatedPipeStart(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCableGlandRgg());
                                     }
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
+                                        cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandRgg());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCableGlandRgg(cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                            cables.get(i).setCorrugatedPipePlastic(corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                        }
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCableGlandRgg());
                                         cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCableGlandRgg().getcorrugatedPipePlastic());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCableGlandRgg());
@@ -273,14 +440,34 @@ public class CableService {
                         case ("MB"):
                             for (int j = 0; j < locationsList.size(); j++) {
                                 if (m == 0) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
+                                        cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipeMetal());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getStartLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCorrugatedPipeMetal(corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                        }
+                                        cables.get(i).setCorrugatedPipeMetal(cables.get(i).getCorrugatedPipeMetal());
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                         cables.get(i).setCorrugatedPipeStart(cables.get(i).getCorrugatedPipeMetal());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandStart(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                     }
                                 }
                                 if (m == 1) {
-                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation())) {
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() == 0) {
+                                        locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
+                                        cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
+                                        cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
+                                    }
+                                    if (locationsList.get(j).getName().equals(cables.get(i).getEndLocation()) && storedValuesRepository.findByName("correction").getValue() != 0) {
+                                        if (cables.get(i).getOuterDiameter().equals(cableRepository.findCableByName(cables.get(i).getName()).getOuterDiameter())) {
+                                            cables.get(i).setOuterDiameter(cables.get(i).getOuterDiameter() + Corrections.makeCorrectionByStandardSize(cables.get(i).getOuterDiameter(), min.getValue(), max.getValue(), correction.getValue()));
+                                            cables.get(i).setCorrugatedPipeMetal(corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cables.get(i).getOuterDiameter()));
+                                        }
+                                        cables.get(i).setCorrugatedPipeMetal(cables.get(i).getCorrugatedPipeMetal());
                                         locationsList.get(j).getGlandsList().add(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
                                         cables.get(i).setCorrugatedPipeEnd(cables.get(i).getCorrugatedPipeMetal());
                                         cablesWithDesignatedAccessories.get(i).setSelectedCableGlandEnd(cables.get(i).getCorrugatedPipeMetal().getCableGlandMB());
@@ -351,5 +538,4 @@ public class CableService {
             }
         }
     }
-
 }
