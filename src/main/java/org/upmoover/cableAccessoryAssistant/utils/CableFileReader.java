@@ -1,18 +1,25 @@
 package org.upmoover.cableAccessoryAssistant.utils;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.upmoover.cableAccessoryAssistant.entities.Cable;
+
 import java.io.*;
 import java.util.ArrayList;
 
 public class CableFileReader {
 
-        public static ArrayList<Cable> readFile(String filePath) {
+    public static ArrayList<Cable> readFile(String filePath) {
         ArrayList<Cable> cables = new ArrayList<>();
         cables.clear();
         String str;
         String[] arr;
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-16"))) {
+        /*try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "UTF-16"))) {
             Cable cable;
             while ((str = br.readLine()) != null) {
                 arr = str.split("\t");
@@ -32,6 +39,23 @@ public class CableFileReader {
                     cables.add(cable);
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cables;
+    }*/
+        try {
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            Workbook workbook = new HSSFWorkbook(fileInputStream);
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+//                while (!row.getCell(0).getStringCellValue().equals(""))
+                if (!row.getCell(2).getStringCellValue().equals(""))
+                cables.add(new Cable(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue().replace('x', 'х').replace(',', '.'), Float.parseFloat(row.getCell(2).getStringCellValue().replace(" m", ""))));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
