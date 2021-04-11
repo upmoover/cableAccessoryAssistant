@@ -53,7 +53,7 @@ public class CableFileReader {
             for (Row row : sheet) {
 //                while (!row.getCell(0).getStringCellValue().equals(""))
                 if (!row.getCell(2).getStringCellValue().equals(""))
-                cables.add(new Cable(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue().replace('x', 'х').replace(',', '.'), Float.parseFloat(row.getCell(2).getStringCellValue().replace(" m", ""))));
+                cables.add(new Cable(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue().replace('x', 'х').replace(',', '.'), Float.parseFloat(row.getCell(2).getStringCellValue().replace(" m", "").replace(',', '.'))));
             }
 
         } catch (IOException e) {
