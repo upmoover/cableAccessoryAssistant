@@ -10,6 +10,7 @@ import org.upmoover.cableAccessoryAssistant.entities.Cable;
 import org.upmoover.cableAccessoryAssistant.entities.Location;
 import org.upmoover.cableAccessoryAssistant.repositories.CableGlandPgRepository;
 import org.upmoover.cableAccessoryAssistant.repositories.LocationsRepository;
+import org.upmoover.cableAccessoryAssistant.repositories.StoredValuesRepository;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
 import org.upmoover.cableAccessoryAssistant.utils.CableFileReader;
 import org.upmoover.cableAccessoryAssistant.utils.ExcelUtil;
@@ -21,6 +22,13 @@ import java.util.*;
 @Controller
 public class MainController {
 
+    CableFileReader cableFileReader;
+
+    @Autowired
+    public void setCableFileReader(CableFileReader cableFileReader) {
+        this.cableFileReader = cableFileReader;
+    }
+
     HashMap<String, ArrayList<String>> locationList = null;
 
     String pathFile = null;
@@ -29,7 +37,7 @@ public class MainController {
     //list of cables added from the base and read from the file
     ArrayList<Cable> cables = new ArrayList<>();
     //list of cables, found in base
-    ArrayList<Cable> cablesFoundInBase = new ArrayList<>();
+//    ArrayList<Cable> cablesFoundInBase = new ArrayList<>();
 
     ArrayList<String> cablesWithLength = new ArrayList<>();
 
@@ -58,6 +66,13 @@ public class MainController {
         this.cableGlandPgRepository = cableGlandPgRepository;
     }
 
+    StoredValuesRepository storedValuesRepository;
+
+    @Autowired
+    public void setStoredValuesRepository(StoredValuesRepository storedValuesRepository) {
+        this.storedValuesRepository = storedValuesRepository;
+    }
+
     //вернуть стартовую страницу
     @GetMapping("/")
     public String homepage() {
@@ -80,10 +95,11 @@ public class MainController {
     @GetMapping("/start/read-cables-list")
     @ResponseStatus(value = HttpStatus.OK)
     public ModelAndView readCablesList(@RequestParam String pathFile) {
+        Shared.isUnknown = false;
         this.pathFile = pathFile;
         listCables.clear();
         cables.clear();
-        listCables = CableFileReader.readFile(this.pathFile);
+        listCables = cableFileReader.readFile(this.pathFile);
         return showCableList(listCables);
     }
 
@@ -91,16 +107,14 @@ public class MainController {
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         Cable cable;
         ModelAndView modelAndView = new ModelAndView();
-//        cables.clear();
         cablesWithLength.clear();
-        cablesFoundInBase.clear();
+        Shared.cablesFoundInBase.clear();
         Shared.uniqueNotFoundCables.clear();
         cableService.getCablesWithDesignatedAccessories().clear();
         //поиск кабеля из списка в базе: если все кабели присутствуют в БД - они выводится на страницу, если нет - выводится предупреждение и возможность добавить недостающий кабель в БД или пропустить этот шаг
         for (int i = 0; i < listCables.size(); i++) {
             if ((cable = cableService.findCableByName(listCables.get(i).getName())) != null) {
                 cables.add(listCables.get(i));
-//                if (Shared.uniqueNotFoundCables.isEmpty()) {
                 cables.get(cables.size() - 1).setId(cable.getId());
                 cables.get(cables.size() - 1).setCableGlandRgg(cable.getCableGlandRgg());
                 cables.get(cables.size() - 1).setCableGlandPg(cable.getCableGlandPg());
@@ -110,9 +124,7 @@ public class MainController {
                 cables.get(cables.size() - 1).setCorrugatedPipeStartLength(cable.getCorrugatedPipeStartLength());
                 cables.get(cables.size() - 1).setCorrugatedPipeEndLength(cable.getCorrugatedPipeEndLength());
                 cables.get(cables.size() - 1).setOuterDiameter(cable.getOuterDiameter());
-                //add cables, that was found in a base to a separate list
-                cablesFoundInBase.add(cables.get(cables.size() - 1));
-//                }
+                Shared.cablesFoundInBase.add(cables.get(cables.size() - 1));
             }
             //add cables, that was not found in a base
             else {
@@ -129,6 +141,10 @@ public class MainController {
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
         modelAndView.addObject("locations", locations);
         modelAndView.addObject("notFoundCables", Shared.notFoundCables);
+        modelAndView.addObject("unknownCables", Shared.unknownCables);
+        modelAndView.addObject("correction", storedValuesRepository.findByName("correction").getValue());
+        modelAndView.addObject("min", storedValuesRepository.findByName("min").getValue());
+        modelAndView.addObject("max", storedValuesRepository.findByName("max").getValue());
         modelAndView.setViewName("show-cables-for-selection-accessories");
         return modelAndView;
     }
@@ -141,10 +157,10 @@ public class MainController {
             model.addAttribute("locationList", locationList);
         }
         if (isSkipCablesSelected) {
-            locationList = cableService.countAccessories(cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength, correction, min, max);
+            locationList = cableService.countAccessories(Shared.cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength, correction, min, max);
             model.addAttribute("locationList", locationList);
         }
-        model.addAttribute("cablesWithLength", sumCables(cablesFoundInBase));
+        model.addAttribute("cablesWithLength", sumCables(Shared.cablesFoundInBase));
         isSkipCablesSelected = false;
         model.addAttribute("cablesWithDesignatedAccessories", cableService.getCablesWithDesignatedAccessories());
         return "show-results";
@@ -189,18 +205,38 @@ public class MainController {
         if (Shared.notFoundCables != null && Shared.notFoundCables.size() > 0)
             modelAndView.setViewName("one-cable-add-form");
 
+        if (Shared.notFoundCables != null && Shared.notFoundCables.isEmpty() && !Shared.unknownCables.isEmpty()) {
+            modelAndView.setViewName("unknown-cable-add-form");
+            return modelAndView;
+        }
+
         modelAndView.setViewName("one-cable-add-form");
         return modelAndView;
     }
 
     @GetMapping("/start/skip-notFoundCable")
     public ModelAndView skipNotFoundCable() {
-        isSkipCablesSelected = true;
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("cables", cablesFoundInBase);
-        ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
-        modelAndView.addObject("locations", locations);
-        modelAndView.setViewName("show-cables-for-selection-accessories");
+        Shared.notFoundCables.clear();
+        if (!Shared.isUnknown) {
+            modelAndView.addObject("cables", Shared.cablesFoundInBase);
+            ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
+            modelAndView.addObject("locations", locations);
+            modelAndView.addObject("correction", storedValuesRepository.findByName("correction").getValue());
+            modelAndView.addObject("min", storedValuesRepository.findByName("min").getValue());
+            modelAndView.addObject("max", storedValuesRepository.findByName("max").getValue());
+            modelAndView.addObject("unknownCables", Shared.unknownCables);
+            modelAndView.setViewName("show-cables-for-selection-accessories");
+        }
+        if (!Shared.unknownCables.isEmpty() && Shared.isUnknown) {
+            modelAndView.addObject("cableDesignation", Shared.unknownCables.get(0).getDesignation());
+            modelAndView.addObject("correction", storedValuesRepository.findByName("correction").getValue());
+            modelAndView.addObject("min", storedValuesRepository.findByName("min").getValue());
+            modelAndView.addObject("max", storedValuesRepository.findByName("max").getValue());
+            modelAndView.addObject("max", storedValuesRepository.findByName("max").getValue());
+            modelAndView.setViewName("unknown-cable-add-form");
+        }
+
         return modelAndView;
     }
 
@@ -255,4 +291,20 @@ public class MainController {
     public void exportToExcel(@RequestParam String pathFile) throws IOException {
         ExcelUtil.writeExcelFile(pathFile, locationList, cablesWithLength, cableService.getCablesWithDesignatedAccessories());
     }
+
+    @GetMapping("/start/skip-unknownCable")
+    public ModelAndView skipUnknownCable() {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("cables", Shared.cablesFoundInBase);
+        ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
+        modelAndView.addObject("locations", locations);
+        modelAndView.addObject("correction", storedValuesRepository.findByName("correction").getValue());
+        modelAndView.addObject("min", storedValuesRepository.findByName("min").getValue());
+        modelAndView.addObject("max", storedValuesRepository.findByName("max").getValue());
+        modelAndView.setViewName("show-cables-for-selection-accessories");
+
+        return modelAndView;
+    }
+
 }

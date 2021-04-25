@@ -250,15 +250,6 @@ public class CableService {
 
                 if (!corrugatedPipeStartLength[i].equals(""))
                     cables.get(i).setCorrugatedPipeStartLength(Float.parseFloat(corrugatedPipeStartLength[i]));
-
-                /*for (int j = 0; j < locationsList.size(); j++) {
-                    if (locationsList.get(j).getName().equals(cables.get(i).getName())) {
-                        if (locationList.containsKey(cables.get(i).getCorrugatedPipeStart().getName())) {
-                            Float sum = locationsList.get(j).getCorrugatedPipeList().get(cables.get(i).getCorrugatedPipeStart().getName());
-                            locationsList.get(j).getCorrugatedPipeList().put(cables.get(i).getCorrugatedPipeStart(), sum + cables.get(i).getCorrugatedPipeStart().getLength());
-                        }
-                    }
-                }*/
             }
         }
     }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.upmoover.cableAccessoryAssistant.entities.*;
 import org.upmoover.cableAccessoryAssistant.repositories.*;
 import org.upmoover.cableAccessoryAssistant.services.CableService;
@@ -20,6 +21,15 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping("/database/cable")
 public class CableController {
+
+    CableFileReader cableFileReader;
+
+    Cable cable = null;
+
+    @Autowired
+    public void setCableFileReader(CableFileReader cableFileReader) {
+        this.cableFileReader = cableFileReader;
+    }
 
     CableRepository cableRepository;
     public ArrayList<Cable> cables;
@@ -92,7 +102,8 @@ public class CableController {
         else
             cable = new Cable(cableType + " " + numberOfWires + "х" + sectionOfWire + "+" + numberOfWiresSecond + "х" + sectionOfWireSecond, Float.parseFloat(outerDiameter.replace(',', '.')), Float.parseFloat(weight.replace(',', '.')));
         if (!CheckUniqueness.isCableInTheBase(cable)) {
-            chooseAccessoryAndSave(cable);
+            chooseAccessory(cable);
+            cableService.saveOneCableToBase(cable);
         }
         return "redirect:/start/add-notFoundCable";
     }
@@ -118,11 +129,12 @@ public class CableController {
         return "add-cable-from-file";
     }
 
-    //сохранить кабели в базу данных список кабелей из txt файла
+    //сохранить кабели в базу данных список кабелей из excel файла
     @RequestMapping("/file-path")
     public String addCableFromFile(@RequestParam String pathFile) {
         //получение списка кабелей из файла для добавления в базу данных
-        ArrayList<Cable> cables = CableFileReader.readFile(pathFile);
+
+        ArrayList<Cable> cables = cableFileReader.readFile(pathFile);
         //проход по полученному списку кабелей, для подбора к каждому из кабелей аксессуаров из соответствующих таблиц
         for (int i = 0; i < cables.size(); i++) {
             //подбор аксессуара: кабельный ввод PG
@@ -144,8 +156,9 @@ public class CableController {
         return "redirect:/database/cable/show-all-cables-from-base";
     }
 
+    //TODO проверить разделение
     //контроллер для поиска и назначения аксессуаров для кабеля
-    public void chooseAccessoryAndSave(Cable cable) {
+    public void chooseAccessory(Cable cable) {
         CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cable.getOuterDiameter(), cable.getOuterDiameter());
         cable.setCableGlandPg(cableglandpg);
         CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(cable.getOuterDiameter(), cable.getOuterDiameter());
@@ -154,10 +167,8 @@ public class CableController {
         cable.setCableGlandRgg(cableGlandRgg);
         CorrugatedPipePlastic corrugatedPipePlastic = corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
         cable.setCorrugatedPipePlastic(corrugatedPipePlastic);
-//        TODO подбор металлической гофры
         CorrugatedPipeMetal corrugatedPipeMetal = corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(cable.getOuterDiameter());
         cable.setCorrugatedPipeMetal(corrugatedPipeMetal);
-        cableService.saveOneCableToBase(cable);
     }
 
     //отобразить страницу редактирования базы данных кабелей
@@ -180,6 +191,48 @@ public class CableController {
             cableRepository.deleteById(isSelected[i]);
         }
         return "redirect:/database/cable/show-all-cables-from-base";
+    }
+
+    //TODO продолжить
+
+    @RequestMapping("/unknown/showAddCableViaForm")
+    public ModelAndView showFormAddUnknownCable(ModelAndView modelAndView) {
+        modelAndView.addObject("cableDesignation", Shared.unknownCables.get(0).getDesignation());
+        modelAndView.setViewName("unknown-cable-add-form");
+        return modelAndView;
+    }
+
+    @RequestMapping("/unknown/addCableViaForm")
+    public String saveUnknownCableToBase(@RequestParam String cableName, String outerDiameter) {
+        Shared.isUnknown = true;
+        if (!Shared.unknownCables.isEmpty()) {
+
+            Shared.unknownCables.get(0).setName(cableName);
+            Shared.unknownCables.get(0).setOuterDiameter(Float.parseFloat(outerDiameter.replace(",", ".")));
+
+            CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(Shared.unknownCables.get(0).getOuterDiameter(), Shared.unknownCables.get(0).getOuterDiameter());
+            Shared.unknownCables.get(0).setCableGlandPg(cableglandpg);
+            CableGlandMG cableGlandMG = cableGlandMgRepository.findFirstByMaxDiameterGreaterThanAndMinDiameterLessThanEqual(Shared.unknownCables.get(0).getOuterDiameter(), Shared.unknownCables.get(0).getOuterDiameter());
+            Shared.unknownCables.get(0).setCableGlandMg(cableGlandMG);
+            CableGlandRgg cableGlandRgg = cableGlandRggRepository.findFirstByMaxDiameterGreaterThan(Shared.unknownCables.get(0).getOuterDiameter());
+            Shared.unknownCables.get(0).setCableGlandRgg(cableGlandRgg);
+            CorrugatedPipePlastic corrugatedPipePlastic = corrugatedPipePlasticRepository.findFirstByInnerDiameterGreaterThan(Shared.unknownCables.get(0).getOuterDiameter());
+            Shared.unknownCables.get(0).setCorrugatedPipePlastic(corrugatedPipePlastic);
+            CorrugatedPipeMetal corrugatedPipeMetal = corrugatedPipeMetalRepository.findFirstByInnerDiameterGreaterThan(Shared.unknownCables.get(0).getOuterDiameter());
+            Shared.unknownCables.get(0).setCorrugatedPipeMetal(corrugatedPipeMetal);
+
+            Shared.cablesFoundInBase.add(Shared.unknownCables.get(0));
+
+            Shared.unknownCables.remove(0);
+        }
+
+        if (Shared.unknownCables.isEmpty()) Shared.isUnknown = false;
+
+//        if (Shared.unknownCables.isEmpty())
+        return "redirect:/start/skip-notFoundCable";
+        /*else
+            return "redirect:/start/add-notFoundCable";*/
+
     }
 
 }

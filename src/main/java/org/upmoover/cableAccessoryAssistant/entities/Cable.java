@@ -321,9 +321,4 @@ public class Cable implements Cloneable {
         return this.hashCode() == obj.hashCode();
     }
 
-   /* @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Cable cloned = new Cable(this.getDesignation(), this.getName(), this.getLength());
-        return cloned;
-    }*/
 }

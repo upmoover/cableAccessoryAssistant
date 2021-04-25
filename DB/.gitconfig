@@ -1,0 +1,10 @@
+[user]
+	email = upmoover@gmail.com
+	name = upmoover
+[difftool "sourcetree"]
+	cmd = '' \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+	cmd = "'' "
+	trustExitCode = true
+[credential]
+	helper = manager

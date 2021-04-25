@@ -24,14 +24,22 @@
     <a href="/start/add-notFoundCable" class="btn-green ">Добавить недостающие кабели</a>
 </div>
 
-<div th:if="${#lists.isEmpty(notFoundCables)}">
+<div class="flex-parent center" style="text-align: center" th:if="${not #lists.isEmpty(unknownCables) and #lists.isEmpty(notFoundCables)}">
+    <a href="/start/skip-unknownCable" class="btn-orange margin-right">Пропустить кабели без наименования</a>
+    <a href="/database/cable/unknown/showAddCableViaForm" class="btn-green ">Добавить недостающие кабели</a>
+</div>
+
+<div th:if="${#lists.isEmpty(notFoundCables) and #lists.isEmpty(unknownCables)}">
     <form th:method="POST" th:action="@{/start/get-attributes}">
+        <div>Текущее значение поправки, %: <th:block th:utext="${correction}"/></div>
         <input class="form-control mt-2" type="text" name="correction"
                placeholder="Укажите поправку для аксессуара, %">
+        <div>Текущее значение минимально-допустимого запаса, мм: <th:block th:utext="${min}"></th:block></div>
         <input class="form-control mt-2" type="text" name="min"
-               placeholder="Укажите нижнюю границу для подбора, мм">
+               placeholder="Укажите минимально-допустимый запас для подбора, мм">
+        <div>Текущее значение максимально-допустимого запаса, мм: <th:block th:utext="${max}"></th:block></div>
         <input class="form-control mt-2" type="text" name="max"
-               placeholder="Укажите верхнюю границу для подбора, мм">
+               placeholder="Укажите максимально-допустимый запас для подбора, мм">
 
         <table align="center">
             <thead class="thead-dark">
@@ -70,9 +78,12 @@
                 </td>
                 <td>
                     <select name="corrugatedPipeStart">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'" th:text="Отсутств."></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'" th:text="Пластик"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
+                                th:text="Отсутств."></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
+                                th:text="Пластик"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
+                                th:text="Металл"></option>
                     </select>
                 </td>
                 <td>
@@ -88,9 +99,12 @@
                 </td>
                 <td>
                     <select name="corrugatedPipeEnd">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'" th:text="Отсутств."></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'" th:text="Пластик"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'" th:text="Металл"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
+                                th:text="Отсутств."></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
+                                th:text="Пластик"></option>
+                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
+                                th:text="Металл"></option>
                     </select>
                 </td>
                 <td>
