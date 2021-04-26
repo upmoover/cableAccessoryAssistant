@@ -63,11 +63,12 @@
                 <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
                 <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
                 <td align="center">
-                    <select name="startLocation">
-                        <option style="align-self: center" th:each="location : ${locations}"
-                                th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
-                                th:text="${location.name}"></option>
-                    </select>
+                <select name="startLocation">
+                    <option selected="selected" style="align-self: center" th:each="location : ${locations}"
+                            th:selected="${cable.getStartLocation() == location.name}"
+                            th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
+                            th:text="${location.name}"></option>
+                </select>
                 </td>
                 <td>
                     <select name="cableGlandTypeStart">
@@ -93,6 +94,7 @@
                 <td align="center">
                     <select name="endLocation">
                         <option style="align-self: center" th:each="location : ${locations}"
+                                th:selected="${cable.getEndLocation() == location.name}"
                                 th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
                                 th:text="${location.name}"></option>
                     </select>

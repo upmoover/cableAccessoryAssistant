@@ -315,10 +315,15 @@ public class Cable implements Cloneable {
         return sum;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object obj) {
         if (this == null || obj == null) return false;
         return this.hashCode() == obj.hashCode();
+    }*/
+//TODO переделать
+    @Override
+    public boolean equals(Object obj) {
+        Cable cable = (Cable) obj;
+        return cable.getName().equalsIgnoreCase(name);
     }
-
 }

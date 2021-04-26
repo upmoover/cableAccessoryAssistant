@@ -156,7 +156,7 @@ public class CableController {
         return "redirect:/database/cable/show-all-cables-from-base";
     }
 
-    //TODO проверить разделение
+    //todo проверить разделение
     //контроллер для поиска и назначения аксессуаров для кабеля
     public void chooseAccessory(Cable cable) {
         CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(cable.getOuterDiameter(), cable.getOuterDiameter());

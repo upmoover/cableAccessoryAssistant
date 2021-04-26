@@ -288,8 +288,9 @@ public class MainController {
 
     @RequestMapping("/excel/file-path")
     @ResponseStatus(value = HttpStatus.OK)
-    public void exportToExcel(@RequestParam String pathFile) throws IOException {
+    public String exportToExcel(@RequestParam String pathFile) throws IOException {
         ExcelUtil.writeExcelFile(pathFile, locationList, cablesWithLength, cableService.getCablesWithDesignatedAccessories());
+        return "success-excel-export";
     }
 
     @GetMapping("/start/skip-unknownCable")
