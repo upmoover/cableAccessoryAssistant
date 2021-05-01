@@ -50,6 +50,8 @@ public class Cable implements Cloneable {
     private CableGland selectedCableGlandStart;
     @Transient
     private CableGland selectedCableGlandEnd;
+    @Transient
+    private Float outerDiameterFromBase;
 
     //--------
 
@@ -204,6 +206,14 @@ public class Cable implements Cloneable {
         this.corrugatedPipeMetal = corrugatedPipeMetal;
     }
 
+    public Float getOuterDiameterFromBase() {
+        return outerDiameterFromBase;
+    }
+
+    public void setOuterDiameterFromBase(Float outerDiameterFromBase) {
+        this.outerDiameterFromBase = outerDiameterFromBase;
+    }
+
     public Cable() {
     }
 
@@ -239,7 +249,7 @@ public class Cable implements Cloneable {
         this.corrugatedPipeEnd = corrugatedPipeEnd;
     }
 
-    public Cable(String name, Float outerDiameter, String designation, Float length, String startLocation, String cableGlandTypeStart, String endLocation, String cableGlandTypeEnd, CableGlandPG cableGlandPg, CableGlandMG cableGlandMg, CableGlandRgg cableGlandRgg, CorrugatedPipePlastic corrugatedPipePlastic, CorrugatedPipeMetal corrugatedPipeMetal) {
+    public Cable(String name, Float outerDiameter, String designation, Float length, String startLocation, String cableGlandTypeStart, String endLocation, String cableGlandTypeEnd, CableGlandPG cableGlandPg, CableGlandMG cableGlandMg, CableGlandRgg cableGlandRgg, CorrugatedPipePlastic corrugatedPipePlastic, CorrugatedPipeMetal corrugatedPipeMetal, CorrugatedPipe corrugatedPipeStart, CorrugatedPipe corrugatedPipeEnd) {
         this.name = name;
         this.outerDiameter = outerDiameter;
         this.designation = designation;
@@ -253,6 +263,8 @@ public class Cable implements Cloneable {
         this.cableGlandRgg = cableGlandRgg;
         this.corrugatedPipePlastic = corrugatedPipePlastic;
         this.corrugatedPipeMetal = corrugatedPipeMetal;
+        this.corrugatedPipeStart = corrugatedPipeStart;
+        this.corrugatedPipeEnd = corrugatedPipeEnd;
     }
 
     public Long getId() {

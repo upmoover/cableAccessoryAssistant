@@ -143,6 +143,8 @@ public class MainController {
                 cables.get(cables.size() - 1).setCorrugatedPipeStartLength(cable.getCorrugatedPipeStartLength());
                 cables.get(cables.size() - 1).setCorrugatedPipeEndLength(cable.getCorrugatedPipeEndLength());
                 cables.get(cables.size() - 1).setOuterDiameter(cable.getOuterDiameter());
+                cables.get(cables.size() - 1).setOuterDiameterFromBase(cable.getOuterDiameter());
+
                 Shared.cablesFoundInBase.add(cables.get(cables.size() - 1));
             }
             //add cables, that was not found in a base
