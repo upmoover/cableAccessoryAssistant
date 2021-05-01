@@ -10,8 +10,10 @@ public class Shared {
     public static ArrayList<Cable> notFoundCables;
     public static ArrayList<Cable> unknownCables = new ArrayList<>();
     public static HashSet<Cable> uniqueNotFoundCables = new HashSet<>();
-    public static boolean isUnknown;
     public static ArrayList<Cable> cablesFoundInBase = new ArrayList<>();
+    public static boolean isUnknown;
+    public static boolean isSkipCablesSelected;
+    public static ArrayList<Cable> listCablesFromFile = new ArrayList<>();
 
     public Shared() {
     }

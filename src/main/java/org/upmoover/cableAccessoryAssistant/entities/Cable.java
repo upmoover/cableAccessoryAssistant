@@ -239,6 +239,22 @@ public class Cable implements Cloneable {
         this.corrugatedPipeEnd = corrugatedPipeEnd;
     }
 
+    public Cable(String name, Float outerDiameter, String designation, Float length, String startLocation, String cableGlandTypeStart, String endLocation, String cableGlandTypeEnd, CableGlandPG cableGlandPg, CableGlandMG cableGlandMg, CableGlandRgg cableGlandRgg, CorrugatedPipePlastic corrugatedPipePlastic, CorrugatedPipeMetal corrugatedPipeMetal) {
+        this.name = name;
+        this.outerDiameter = outerDiameter;
+        this.designation = designation;
+        this.length = length;
+        this.startLocation = startLocation;
+        this.cableGlandTypeStart = cableGlandTypeStart;
+        this.endLocation = endLocation;
+        this.cableGlandTypeEnd = cableGlandTypeEnd;
+        this.cableGlandPg = cableGlandPg;
+        this.cableGlandMg = cableGlandMg;
+        this.cableGlandRgg = cableGlandRgg;
+        this.corrugatedPipePlastic = corrugatedPipePlastic;
+        this.corrugatedPipeMetal = corrugatedPipeMetal;
+    }
+
     public Long getId() {
         return id;
     }
@@ -315,12 +331,6 @@ public class Cable implements Cloneable {
         return sum;
     }
 
-    /*@Override
-    public boolean equals(Object obj) {
-        if (this == null || obj == null) return false;
-        return this.hashCode() == obj.hashCode();
-    }*/
-//TODO переделать
     @Override
     public boolean equals(Object obj) {
         Cable cable = (Cable) obj;

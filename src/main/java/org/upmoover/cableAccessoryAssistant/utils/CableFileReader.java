@@ -94,7 +94,6 @@ public class CableFileReader {
 
                 if (row.getCell(1).getStringCellValue().equals("")) {
                     Shared.unknownCables.add(new Cable(row.getCell(0).getStringCellValue(), "none=" + row.getCell(0).getStringCellValue(), Float.parseFloat(cableLength.replace(" m", "").replace(',', '.')), startLocation, endLocation));
-                    //TODO проверить пропуск кода ниже по достижению continue
                     continue;
                 }
 

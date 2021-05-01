@@ -70,7 +70,7 @@ public class ExcelUtil {
             row.createCell(z).setCellValue("=");
             z++;
             row.createCell(z).setCellValue(cablesWithDesignatedAccessories.get(l).getSelectedCableGlandStart().getName());
-            if (cablesWithDesignatedAccessories.get(l).getCorrugatedPipeStartLength() != null) {
+            if (cablesWithDesignatedAccessories.get(l).getCorrugatedPipeStart() != null) {
                 z++;
                 row.createCell(z).setCellValue(cablesWithDesignatedAccessories.get(l).getCorrugatedPipeStart().getName() + "=" + cablesWithDesignatedAccessories.get(l).getCorrugatedPipeStartLength());
             }
@@ -82,7 +82,7 @@ public class ExcelUtil {
             row.createCell(z).setCellValue("=");
             z++;
             row.createCell(z).setCellValue(cablesWithDesignatedAccessories.get(l).getSelectedCableGlandEnd().getName());
-            if (cablesWithDesignatedAccessories.get(l).getCorrugatedPipeEndLength() != null) {
+            if (cablesWithDesignatedAccessories.get(l).getCorrugatedPipeEnd() != null) {
                 z++;
                 row.createCell(z).setCellValue(cablesWithDesignatedAccessories.get(l).getCorrugatedPipeEnd().getName() + "=" + cablesWithDesignatedAccessories.get(l).getCorrugatedPipeEndLength());
             }
