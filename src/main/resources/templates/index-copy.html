@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -9,9 +9,6 @@
     <title>Greeting page</title>
 </head>
 <body>
-
-<div th:insert="fragments/menu.html :: menu"></div>
-
 <h2 align="center">Стартовая страница</h2>
 <div class="return-home">
     <a href="/help" class="btn-blue">Справка</a>
@@ -20,6 +17,5 @@
     <a href="/database" class="btn-orange margin-right">Редактирование БД</a>
     <a href="/start" class="btn-green"><span>Начать работу</span></a>
 </div>
-
 </body>
 </html>

@@ -73,7 +73,7 @@ public class MainController {
     //вернуть стартовую страницу
     @GetMapping("/")
     public String homepage() {
-        return "index";
+        return "index.html";
     }
 
     //вернуть страницу справки
