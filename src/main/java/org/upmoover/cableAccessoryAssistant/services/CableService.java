@@ -135,7 +135,6 @@ public class CableService {
             correction = new StoredValues("correction", 0F);
             storedValuesRepository.save(correction);
         } else if (!inputCorrection.equals("")) {
-            StoredValues correction = new StoredValues();
             correction = storedValuesRepository.findByName("correction");
             correction.setValue(Float.parseFloat(inputCorrection.replace(",", ".")));
             storedValuesRepository.save(correction);

@@ -60,40 +60,46 @@ public class CableFileReader {
                         locationsRepository.save(new Location(row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().indexOf("+") + 1, row.getCell(3).getStringCellValue().indexOf(" "))));
                     }
                 }
-                if (row.getCell(4).getStringCellValue().contains(" ")) {
-                    if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "))) && !row.getCell(4).getStringCellValue().equals(""))
-                        locationsRepository.save(new Location(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "))));
-                } else {
-                    if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1)) && !row.getCell(3).getStringCellValue().equals(""))
-                        locationsRepository.save(new Location(row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1)));
-                    if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1)) && !row.getCell(4).getStringCellValue().equals(""))
-                        locationsRepository.save(new Location(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1)));
+
+                if (row.getCell(4) != null && (row.getCell(4).getCellType() == CellType.BLANK)) {
+                    if (row.getCell(4).getStringCellValue().contains(" ")) {
+                        if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "))) && !row.getCell(4).getStringCellValue().equals(""))
+                            locationsRepository.save(new Location(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "))));
+                    } else {
+                        if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1)) && !row.getCell(3).getStringCellValue().equals(""))
+                            locationsRepository.save(new Location(row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1)));
+                        if (!locationsRepository.findAll().stream().map(Location::getName).collect(Collectors.toList()).contains(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1)) && !row.getCell(4).getStringCellValue().equals(""))
+                            locationsRepository.save(new Location(row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1)));
+                    }
                 }
             }
 
             for (Row row : sheet) {
 
-                String startLocation;
-                String endLocation;
+                String startLocation = " ";
+                String endLocation = " ";
 
-                if (row.getCell(3).getStringCellValue().contains("")) startLocation = "none";
-                if (row.getCell(3).getStringCellValue().contains(" "))
-                    startLocation = row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().indexOf("+") + 1, row.getCell(3).getStringCellValue().indexOf(" "));
-                else
-                    startLocation = row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1);
-
-                if (row.getCell(4).getStringCellValue().contains("")) endLocation = "none";
-                if (row.getCell(4).getStringCellValue().contains(" "))
-                    endLocation = row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "));
-                else
-                    endLocation = row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1);
-
+                if (row.getCell(3) != null) {
+                    if (row.getCell(3).getStringCellValue().contains("")) startLocation = "none";
+                    if (row.getCell(3).getStringCellValue().contains(" "))
+                        startLocation = row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().indexOf("+") + 1, row.getCell(3).getStringCellValue().indexOf(" "));
+                    else
+                        startLocation = row.getCell(3).getStringCellValue().substring(row.getCell(3).getStringCellValue().lastIndexOf("+") + 1);
+                }
+                if (row.getCell(4) != null) {
+                    if (row.getCell(4).getStringCellValue().contains("")) endLocation = "none";
+                    if (row.getCell(4).getStringCellValue().contains(" "))
+                        endLocation = row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().indexOf("+") + 1, row.getCell(4).getStringCellValue().indexOf(" "));
+                    else
+                        endLocation = row.getCell(4).getStringCellValue().substring(row.getCell(4).getStringCellValue().lastIndexOf("+") + 1);
+                }
                 String cableLength = "0 m";
                 String cableName;
 
-                if (!(row.getCell(2).getCellType() == CellType.BLANK) && row.getCell(2) != null) cableLength = row.getCell(2).getStringCellValue();
+                if (row.getCell(2) != null && !row.getCell(2).getStringCellValue().isEmpty())
+                    cableLength = row.getCell(2).getStringCellValue();
 
-                if ((row.getCell(1).getCellType() == CellType.BLANK) && row.getCell(1) != null && !(row.getCell(0).getCellType() == CellType.BLANK) && row.getCell(0) != null) {
+                if (row.getCell(1) != null && (row.getCell(1).getCellType() == CellType.BLANK) && !(row.getCell(0).getCellType() == CellType.BLANK) && row.getCell(0) != null) {
                     Shared.unknownCables.add(new Cable(row.getCell(0).getStringCellValue(), "none=" + row.getCell(0).getStringCellValue(), Float.parseFloat(cableLength.replace(" m", "").replace(',', '.')), startLocation, endLocation));
                     continue;
                 }
