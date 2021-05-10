@@ -47,6 +47,12 @@ public class LocationsController {
     public String editCableLocation(Model model) {
         ArrayList<Location> locations;
         locations = (ArrayList<Location>) locationsRepository.findAll();
+        Location location = new Location();
+        for (Location l : locations
+        ) {
+            if (l.getName().equals("none")) location = l;
+        }
+        locations.remove(location);
         model.addAttribute("locations", locations);
         return "show-all-locations-from-base";
     }

@@ -249,7 +249,7 @@ public class Cable implements Cloneable {
         this.corrugatedPipeEnd = corrugatedPipeEnd;
     }
 
-    public Cable(String name, Float outerDiameter, String designation, Float length, String startLocation, String cableGlandTypeStart, String endLocation, String cableGlandTypeEnd, CableGlandPG cableGlandPg, CableGlandMG cableGlandMg, CableGlandRgg cableGlandRgg, CorrugatedPipePlastic corrugatedPipePlastic, CorrugatedPipeMetal corrugatedPipeMetal, CorrugatedPipe corrugatedPipeStart, CorrugatedPipe corrugatedPipeEnd) {
+    public Cable(String name, Float outerDiameter, String designation, Float length, String startLocation, String cableGlandTypeStart, String endLocation, String cableGlandTypeEnd, CableGlandPG cableGlandPg, CableGlandMG cableGlandMg, CableGlandRgg cableGlandRgg, CorrugatedPipePlastic corrugatedPipePlastic, CorrugatedPipeMetal corrugatedPipeMetal, CorrugatedPipe corrugatedPipeStart, CorrugatedPipe corrugatedPipeEnd, Float outerDiameterFromBase) {
         this.name = name;
         this.outerDiameter = outerDiameter;
         this.designation = designation;
@@ -265,6 +265,7 @@ public class Cable implements Cloneable {
         this.corrugatedPipeMetal = corrugatedPipeMetal;
         this.corrugatedPipeStart = corrugatedPipeStart;
         this.corrugatedPipeEnd = corrugatedPipeEnd;
+        this.outerDiameterFromBase = outerDiameterFromBase;
     }
 
     public Long getId() {

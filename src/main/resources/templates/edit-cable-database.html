@@ -1,24 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
     <title>Edit database</title>
 </head>
 <body>
-
+<div th:insert="fragments/menu.html :: menu"></div>
 <h2 align="center">Работа с базой данных кабеля</h2>
-<div class="d-flex justify-content-center">
-    <a href="/" class="btn btn-primary" >На главную</a>
-</div>
 <h4 class="display-5" align="center">Добавить кабель</h4>
-<!--<div class="d-flex justify-content-center btn-toolbar mx-2">-->
 <div class="mx-auto text-center">
-        <a href="/database/cable/show-cable-add-form" class="btn btn-success">Добавить кабель через форму</a>
-        <a href="/database/cable/show-cable-add-from-file-form" class="btn btn-success">Добавить кабель из файла</a>
+    <a href="/database/cable/show-cable-add-form" class="btn btn-success">Добавить кабель через форму</a>
+    <a href="/database/cable/show-cable-add-from-file-form" class="btn btn-success">Добавить кабель из файла</a>
 </div>
 <h4 align="center">Показать все кабели из БД (с возможностью удаления)</h4>
 <div class="d-flex justify-content-center">

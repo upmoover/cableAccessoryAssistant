@@ -1,6 +1,7 @@
 package org.upmoover.cableAccessoryAssistant.utils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -90,9 +91,9 @@ public class CableFileReader {
                 String cableLength = "0 m";
                 String cableName;
 
-                if (!row.getCell(2).getStringCellValue().equals("")) cableLength = row.getCell(2).getStringCellValue();
+                if (!(row.getCell(2).getCellType() == CellType.BLANK) && row.getCell(2) != null) cableLength = row.getCell(2).getStringCellValue();
 
-                if (row.getCell(1).getStringCellValue().equals("")) {
+                if ((row.getCell(1).getCellType() == CellType.BLANK) && row.getCell(1) != null && !(row.getCell(0).getCellType() == CellType.BLANK) && row.getCell(0) != null) {
                     Shared.unknownCables.add(new Cable(row.getCell(0).getStringCellValue(), "none=" + row.getCell(0).getStringCellValue(), Float.parseFloat(cableLength.replace(" m", "").replace(',', '.')), startLocation, endLocation));
                     continue;
                 }

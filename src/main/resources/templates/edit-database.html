@@ -1,58 +1,48 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <title>Edit database</title>
+    <title>Greeting page</title>
 </head>
 <body>
+
+<div th:insert="fragments/menu.html :: menu"></div>
+
 <h2 align="center">Работа с базой данных</h2>
-<div class="return-home">
-    <a href="/" class="btn-blue">На главную</a>
-</div>
-<div class="test">
-    <h4 align="center">Редактирование БД кабеля</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/cable/edit-cable-database" class="btn-orange">Редактировать БД кабелей</a>
-    </div>
+
+<h4 align="center">Редактирование БД кабеля</h4>
+<div class="d-flex justify-content-center">
+    <a href="/database/cable/edit-cable-database" class="btn btn-success">Редактировать БД кабелей</a>
 </div>
 
-<div class="test">
-    <h4 align="center">Редактирование БД сальников PG</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/cableGlandPg" class="btn-orange">Редактировать БД сальников PG</a>
-    </div>
+
+<h4 align="center">Редактирование БД сальников PG</h4>
+<div class="d-flex justify-content-center">
+    <a href="/database/cableGlandPg" class="btn btn-success">Редактировать БД сальников PG</a>
 </div>
 
-<div class="test">
-    <h4 align="center">Редактирование БД сальников MG</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/cableGlandMg" class="btn-orange">Редактировать БД сальников MG</a>
-    </div>
+<h4 align="center">Редактирование БД сальников MG</h4>
+<div class="d-flex justify-content-center">
+    <a href="/database/cableGlandMg" class="btn btn-success">Редактировать БД сальников MG</a>
 </div>
 
-<div class="test">
-    <h4 align="center">Редактирование БД сальников RGG</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/cableGlandRgg" class="btn-orange">Редактировать БД сальников RGG</a>
-    </div>
+<h4 align="center">Редактирование БД сальников RGG</h4>
+    <div class="d-flex justify-content-center">
+    <a href="/database/cableGlandRgg" class="btn btn-success">Редактировать БД сальников RGG</a>
 </div>
 
-<div class="test">
-    <h4 align="center">Редактирование БД гофрированной трубы</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/corrugatedPipe" class="btn-orange">Редактировать БД гофрированной трубы</a>
-    </div>
+<h4 align="center">Редактирование БД гофрированной трубы</h4>
+<div class="d-flex justify-content-center">
+    <a href="/database/corrugatedPipe" class="btn btn-success">Редактировать БД гофрированной трубы</a>
 </div>
 
-<div class="test">
-    <h4 align="center">Редактирование местоположений</h4>
-    <div class="one-button-vertical-center">
-        <a href="/database/locations" class="btn-orange">Редактировать местоположения</a>
-    </div>
+<h4 align="center">Редактирование местоположений</h4>
+<div class="d-flex justify-content-center">
+    <a href="/database/locations" class="btn btn-success">Редактировать местоположения</a>
 </div>
+
 </body>
 </html>

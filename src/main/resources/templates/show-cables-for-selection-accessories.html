@@ -1,128 +1,146 @@
 <!doctype html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="../../style.css">
     <!--Подключение Bootstrap 4-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <title>Show all cables from base</title>
 </head>
 <body>
+<!--<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+    window.addEventListener("pageshow", function (event) {
+        var historyTraversal = event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2);
+        if (historyTraversal) {
+            window.location.reload();
+        }
+    });
+</script>-->
+<div th:insert="fragments/menu.html :: menu"></div>
 <h2 align="center">Список кабелей для подбора аксессуаров</h2>
-<div class="flex-parent center">
-    <a href="/" class="btn-blue">На главную</a>
-</div>
-<!--<div style="text-align: center" th:if="${#lists.isEmpty(notFoundCables)}">Соответствие БД: Все кабели из списка найдены в базе данных, можно продолжать работу</div>-->
+
 <div style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}"><b>Несоответствие БД</b>: Не все кабели из
     списка найдены в базе данных
 </div>
-<div class="flex-parent center" style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">
-    <a href="/start/skip-notFoundCable" class="btn-orange margin-right">Пропустить недостающие кабели</a>
-    <a href="/start/add-notFoundCable" class="btn-green ">Добавить недостающие кабели</a>
+<div class="flex-parent center mt-5" style="text-align: center" th:if="${not #lists.isEmpty(notFoundCables)}">
+    <a href="/start/skip-notFoundCable" class="btn btn-warning">Пропустить недостающие кабели</a>
+    <a href="/start/add-notFoundCable" class="btn btn-success">Добавить недостающие кабели</a>
 </div>
 
-<div class="flex-parent center" style="text-align: center" th:if="${not #lists.isEmpty(unknownCables) and #lists.isEmpty(notFoundCables)}">
-    <a href="/start/skip-unknownCable" class="btn-orange margin-right">Пропустить кабели без наименования</a>
-    <a href="/database/cable/unknown/showAddCableViaForm" class="btn-green ">Добавить недостающие кабели</a>
+<div style="text-align: center" th:if="${not #lists.isEmpty(unknownCables) and #lists.isEmpty(notFoundCables)}"><b>Несоответствие
+    БД</b>: Присутствуют
+    кабели без наименования
+</div>
+<div class="flex-parent center mt-5" style="text-align: center"
+     th:if="${not #lists.isEmpty(unknownCables) and #lists.isEmpty(notFoundCables)}">
+    <a href="/start/skip-unknownCable" class="btn btn-warning">Пропустить кабели без наименования</a>
+    <a href="/database/cable/unknown/showAddCableViaForm" class="btn btn-success">Добавить кабели c отсутствующим
+        наименованием</a>
 </div>
 
 <div th:if="${#lists.isEmpty(notFoundCables) and #lists.isEmpty(unknownCables)}">
     <form th:method="POST" th:action="@{/start/get-attributes}">
-        <div>Текущее значение поправки, %: <th:block th:utext="${correction}"/></div>
+        <div>Текущее значение поправки, %:
+            <th:block th:utext="${correction}"/>
+        </div>
         <input class="form-control mt-2" type="text" name="correction"
                placeholder="Укажите поправку для аксессуара, %">
-        <div>Текущее значение минимально-допустимого запаса, мм: <th:block th:utext="${min}"></th:block></div>
+        <div>Текущее значение минимально-допустимого запаса, мм:
+            <th:block th:utext="${min}"></th:block>
+        </div>
         <input class="form-control mt-2" type="text" name="min"
                placeholder="Укажите минимально-допустимый запас для подбора, мм">
-        <div>Текущее значение максимально-допустимого запаса, мм: <th:block th:utext="${max}"></th:block></div>
+        <div>Текущее значение максимально-допустимого запаса, мм:
+            <th:block th:utext="${max}"></th:block>
+        </div>
         <input class="form-control mt-2" type="text" name="max"
                placeholder="Укажите максимально-допустимый запас для подбора, мм">
-
-        <table align="center">
-            <thead class="thead-dark">
-            <tr>
-                <td style="text-align: center">Имя в проекте</td>
-                <td>Обозначение в проекте</td>
-                <td>Длина, м</td>
-                <td>Начало кабеля</td>
-                <td>Сальник</td>
-                <td style="text-align: center">Гофра</td>
-                <td>Длина гофры</td>
-                <td></td>
-                <td>Конец кабеля</td>
-                <td style="text-align: center">Гофра</td>
-                <td>Длина гофры</td>
-                <td>Сальник</td>
-            </tr>
-            </thead>
-            <tr class="data-row" th:each="cable : ${cables}">
-                <td th:text="${cable.designation}" th:value="${cable.designation}">
-                <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
-                <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
-                <td align="center">
-                <select name="startLocation">
-                    <option selected="selected" style="align-self: center" th:each="location : ${locations}"
-                            th:selected="${cable.getStartLocation() == location.name}"
-                            th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
-                            th:text="${location.name}"></option>
-                </select>
-                </td>
-                <td>
-                    <select name="cableGlandTypeStart">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
-                    </select>
-                </td>
-                <td>
-                    <select name="corrugatedPipeStart">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
-                                th:text="Отсутств."></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
-                                th:text="Пластик"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
-                                th:text="Металл"></option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="corrugatedPipeStartLength">
-                </td>
-                <td>-------></td>
-                <td align="center">
-                    <select name="endLocation">
-                        <option style="align-self: center" th:each="location : ${locations}"
-                                th:selected="${cable.getEndLocation() == location.name}"
-                                th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
-                                th:text="${location.name}"></option>
-                    </select>
-                </td>
-                <td>
-                    <select name="corrugatedPipeEnd">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
-                                th:text="Отсутств."></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
-                                th:text="Пластик"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
-                                th:text="Металл"></option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="corrugatedPipeEndLength">
-                </td>
-                <td>
-                    <select name="cableGlandTypeEnd">
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
-                        <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-        <div class="flex-parent center">
-            <button type="submit" class="btn-green">Подобрать аксессуары</button>
+        <div class="mt-5">
+            <table align="center">
+                <thead class="thead-dark">
+                <tr>
+                    <td style="text-align: center">Имя в проекте</td>
+                    <td>Обозначение в проекте</td>
+                    <td>Длина, м</td>
+                    <td>Начало кабеля</td>
+                    <td>Сальник</td>
+                    <td style="text-align: center">Гофра</td>
+                    <td>Длина гофры</td>
+                    <td></td>
+                    <td>Конец кабеля</td>
+                    <td style="text-align: center">Гофра</td>
+                    <td>Длина гофры</td>
+                    <td>Сальник</td>
+                </tr>
+                </thead>
+                <tr class="data-row" th:each="cable : ${cables}">
+                    <td th:text="${cable.designation}" th:value="${cable.designation}">
+                    <td style="text-align: center" th:text="${cable.name}" th:value="${cable.name}">
+                    <td style="text-align: center" th:text="${cable.length}" th:value="${cable.length}">
+                    <td align="center">
+                        <select name="startLocation">
+                            <option selected="selected" style="align-self: center" th:each="location : ${locations}"
+                                    th:selected="${cable.getStartLocation() == location.name}"
+                                    th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
+                                    th:text="${location.name}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="cableGlandTypeStart">
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="corrugatedPipeStart">
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
+                                    th:text="Отсутств."></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
+                                    th:text="Пластик"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
+                                    th:text="Металл"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="corrugatedPipeStartLength">
+                    </td>
+                    <td>-------></td>
+                    <td align="center">
+                        <select name="endLocation">
+                            <option style="align-self: center" th:each="location : ${locations}"
+                                    th:selected="${cable.getEndLocation() == location.name}"
+                                    th:value="${cable.designation} + '#' + ${cable.id} + '=' + ${location.name}"
+                                    th:text="${location.name}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="corrugatedPipeEnd">
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=none'"
+                                    th:text="Отсутств."></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=plastic'"
+                                    th:text="Пластик"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=metal'"
+                                    th:text="Металл"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="corrugatedPipeEndLength">
+                    </td>
+                    <td>
+                        <select name="cableGlandTypeEnd">
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=PG'" th:text="PG"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=MG'" th:text="MG"></option>
+                            <option th:value="${cable.designation} + '#' + ${cable.id} + '=RGG'" th:text="RGG"></option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mt-5">
+            <button type="submit" class="btn btn-success">Подобрать аксессуары</button>
         </div>
     </form>
 </div>

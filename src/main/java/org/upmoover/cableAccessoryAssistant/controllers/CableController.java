@@ -206,6 +206,7 @@ public class CableController {
 
             Shared.unknownCables.get(0).setName(cableName);
             Shared.unknownCables.get(0).setOuterDiameter(Float.parseFloat(outerDiameter.replace(",", ".")));
+            Shared.unknownCables.get(0).setOuterDiameterFromBase(Float.parseFloat(outerDiameter.replace(",", ".")));
 
             CableGlandPG cableglandpg = cableGlandPgRepository.findFirstByMaxDiameterGreaterThanEqualAndMinDiameterLessThanEqual(Shared.unknownCables.get(0).getOuterDiameter(), Shared.unknownCables.get(0).getOuterDiameter());
             Shared.unknownCables.get(0).setCableGlandPg(cableglandpg);

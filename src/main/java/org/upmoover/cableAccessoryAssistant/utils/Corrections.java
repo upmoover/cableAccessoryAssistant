@@ -1,9 +1,5 @@
 package org.upmoover.cableAccessoryAssistant.utils;
 
-import org.upmoover.cableAccessoryAssistant.entities.Cable;
-
-import java.util.ArrayList;
-
 public class Corrections {
     public static Float makeCorrectionByStandardSize(Float cableOuterDiameter, Float min, Float max, Float correction) {
         if (correction.equals(0)) return 0F;

@@ -73,7 +73,7 @@ public class MainController {
     //вернуть стартовую страницу
     @GetMapping("/")
     public String homepage() {
-        return "index.html";
+        return "index";
     }
 
     //вернуть страницу справки
@@ -102,6 +102,7 @@ public class MainController {
     }
 
     //считать список кабеля, вывести страницу со списком и выбором аксессуаров
+    //TODO listcable с пустыми кабелями, 20 штук, разобраться
     public ModelAndView showCableList(ArrayList<Cable> listCables) {
         ModelAndView modelAndView = new ModelAndView();
         Shared.uniqueNotFoundCables.clear();
@@ -110,6 +111,8 @@ public class MainController {
         setCablesFields(listCables);
 
         Shared.notFoundCables = new ArrayList<>(Shared.uniqueNotFoundCables);
+        if (Shared.uniqueNotFoundCables.isEmpty())
+            Shared.notFoundCables.clear();
         modelAndView.addObject("cables", cables);
         //получение из базы списка местоположений
         ArrayList<Location> locations = (ArrayList<Location>) locationsRepository.findAll();
@@ -148,12 +151,13 @@ public class MainController {
                 Shared.cablesFoundInBase.add(cables.get(cables.size() - 1));
             }
             //add cables, that was not found in a base
-            else {
+            else if (listCables.get(i).getDesignation() != null) {
                 Shared.uniqueNotFoundCables.add(listCables.get(i));
             }
         }
 
         //if there are no cables added to the list - clear the cable list to add missing cables to the base
+
         if (!Shared.uniqueNotFoundCables.isEmpty()) cables.clear();
     }
 
@@ -162,12 +166,26 @@ public class MainController {
     public String getCableAttributes(Model model, @RequestParam(value = "startLocation", required = false) String[] startLocation, @RequestParam(value = "cableGlandTypeStart", required = false) String[] cableGlandTypeStart, @RequestParam(value = "corrugatedPipeStart", required = false) String[] corrugatedPipeStart, @RequestParam(value = "endLocation", required = false) String[] endLocation, @RequestParam(value = "corrugatedPipeEnd", required = false) String[] corrugatedPipeEnd, @RequestParam(value = "cableGlandTypeEnd", required = false) String[] cableGlandTypeEnd, @RequestParam(value = "corrugatedPipeStartLength", required = false, defaultValue = "0") String[] corrugatedPipeStartLength, @RequestParam(value = "corrugatedPipeEndLength", required = false, defaultValue = "0") String[] corrugatedPipeEndLength, @RequestParam(value = "correction", required = false) String correction, @RequestParam(value = "min", required = false) String min, @RequestParam(value = "max", required = false) String max) {
         if (!Shared.isSkipCablesSelected) {
             locationList.clear();
+            for (Cable c : cables
+            ) {
+                c.setCorrugatedPipeStartLength(0F);
+                c.setCorrugatedPipeEndLength(0F);
+                c.setCorrugatedPipeStart(null);
+                c.setCorrugatedPipeEnd(null);
+            }
             locationList = cableService.countAccessories(cables, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength, correction, min, max);
             model.addAttribute("locationList", locationList);
             model.addAttribute("cablesWithLength", sumCables(cables));
         }
         if (Shared.isSkipCablesSelected) {
             locationList.clear();
+            for (Cable c : Shared.cablesFoundInBase
+            ) {
+                c.setCorrugatedPipeStartLength(0F);
+                c.setCorrugatedPipeEndLength(0F);
+                c.setCorrugatedPipeStart(null);
+                c.setCorrugatedPipeEnd(null);
+            }
             locationList = cableService.countAccessories(Shared.cablesFoundInBase, startLocation, cableGlandTypeStart, corrugatedPipeStart, endLocation, corrugatedPipeEnd, cableGlandTypeEnd, corrugatedPipeStartLength, corrugatedPipeEndLength, correction, min, max);
             model.addAttribute("locationList", locationList);
             model.addAttribute("cablesWithLength", sumCables(Shared.cablesFoundInBase));
@@ -299,10 +317,10 @@ public class MainController {
     }
 
     @RequestMapping("/excel/file-path")
-    @ResponseStatus(value = HttpStatus.OK)
+//    @ResponseStatus(value = HttpStatus.OK)
     public String exportToExcel(@RequestParam String pathFile) throws IOException {
         ExcelUtil.writeExcelFile(pathFile, locationList, cablesWithLength, cableService.getCablesWithDesignatedAccessories());
-        return "success-excel-export";
+        return "redirect:/start";
     }
 
     @GetMapping("/start/skip-unknownCable")
