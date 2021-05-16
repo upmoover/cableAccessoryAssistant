@@ -177,7 +177,7 @@ public class CableService {
         cablesWithDesignatedAccessories.clear();
         for (int i = 0; i < cables.size(); i++) {
             //cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getDesignation(), cables.get(i).getName(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getEndLocation(), cables.get(i).getCorrugatedPipeStartLength(), cables.get(i).getCorrugatedPipeEndLength(), cables.get(i).getCorrugatedPipeStart(), cables.get(i).getCorrugatedPipeEnd()));
-            cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getName(), cables.get(i).getOuterDiameter(), cables.get(i).getDesignation(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getCableGlandTypeStart(), cables.get(i).getEndLocation(), cables.get(i).getCableGlandTypeEnd(), cables.get(i).getCableGlandPg(), cables.get(i).getCableGlandMg(), cables.get(i).getCableGlandRgg(), cables.get(i).getCorrugatedPipePlastic(), cables.get(i).getCorrugatedPipeMetal(), cables.get(i).getCorrugatedPipeStart(), cables.get(i).getCorrugatedPipeEnd(), cables.get(i).getOuterDiameterFromBase()));
+            cablesWithDesignatedAccessories.add(new Cable(cables.get(i).getName(), cables.get(i).getOuterDiameter(), cables.get(i).getDesignation(), cables.get(i).getLength(), cables.get(i).getStartLocation(), cables.get(i).getCableGlandTypeStart(), cables.get(i).getEndLocation(), cables.get(i).getCableGlandTypeEnd(), cables.get(i).getCableGlandPg(), cables.get(i).getCableGlandMg(), cables.get(i).getCableGlandRgg(), cables.get(i).getCorrugatedPipePlastic(), cables.get(i).getCorrugatedPipeMetal(), cables.get(i).getCorrugatedPipeStart(), cables.get(i).getCorrugatedPipeEnd(), cables.get(i).getOuterDiameterFromBase(), cables.get(i).getCorrugatedPipeStartLength(), cables.get(i).getCorrugatedPipeEndLength()));
         }
 //        selectionStartEndAccessories(cables, locationsList);
         selectionStartEndAccessories(cablesWithDesignatedAccessories, locationsList);
@@ -539,7 +539,7 @@ public class CableService {
             for (Location location : locationsList
             ) {
 
-                if (location.getName().equals(cablesWithAccessories.get(i).getStartLocation()) & !(cablesWithAccessories.get(i).getCorrugatedPipeStart() == null)) {
+                if (location.getName().equals(cablesWithAccessories.get(i).getStartLocation()) && !(cablesWithAccessories.get(i).getCorrugatedPipeStart() == null)) {
                     if (location.getCorrugatedPipeList().size() == 0) {
                         location.getCorrugatedPipeList().put(cablesWithAccessories.get(i).getCorrugatedPipeStart(), cablesWithAccessories.get(i).getCorrugatedPipeStartLength());
                         firstAdd = true;
@@ -556,7 +556,7 @@ public class CableService {
                     }
                 }
 
-                if (location.getName().equals(cablesWithAccessories.get(i).getEndLocation()) & !(cablesWithAccessories.get(i).getCorrugatedPipeEnd() == null)) {
+                if (location.getName().equals(cablesWithAccessories.get(i).getEndLocation()) && !(cablesWithAccessories.get(i).getCorrugatedPipeEnd() == null)) {
                     if (location.getCorrugatedPipeList().size() == 0) {
                         location.getCorrugatedPipeList().put(cablesWithAccessories.get(i).getCorrugatedPipeEnd(), cablesWithAccessories.get(i).getCorrugatedPipeEndLength());
                         firstAdd = true;
